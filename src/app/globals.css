@@ -11,6 +11,10 @@
   --muted: #737373;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
@@ -20,6 +24,11 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
+  cursor: none;
+}
+
+@media (max-width: 768px) {
+  body { cursor: auto; }
 }
 
 ::selection {
@@ -31,6 +40,111 @@ body {
   font-family: 'Space Grotesk', sans-serif;
 }
 
+/* ─── CUSTOM CURSOR ─── */
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: #0a0a0a;
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: width 0.3s, height 0.3s, background 0.3s, transform 0.3s;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(10, 10, 10, 0.3);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: width 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+              height 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+              border-color 0.3s,
+              background 0.3s;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-hover .cursor-dot {
+  width: 0;
+  height: 0;
+}
+
+.cursor-hover .cursor-ring {
+  width: 80px;
+  height: 80px;
+  border-color: rgba(10, 10, 10, 0.6);
+  background: rgba(10, 10, 10, 0.04);
+}
+
+.cursor-text .cursor-dot {
+  width: 60px;
+  height: 60px;
+  background: rgba(10, 10, 10, 0.08);
+  mix-blend-mode: difference;
+}
+
+.cursor-text .cursor-ring {
+  width: 0;
+  height: 0;
+}
+
+@media (max-width: 768px) {
+  .cursor-dot, .cursor-ring { display: none; }
+}
+
+/* ─── SCROLL PROGRESS ─── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #0a0a0a, #555);
+  z-index: 9999;
+  transform-origin: left;
+}
+
+/* ─── LOADING SCREEN ─── */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loading-bar {
+  width: 120px;
+  height: 2px;
+  background: #333;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 24px;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: #fff;
+  animation: loadFill 1.8s ease-in-out forwards;
+}
+
+@keyframes loadFill {
+  0% { width: 0; }
+  60% { width: 80%; }
+  100% { width: 100%; }
+}
+
+/* ─── MARQUEE ─── */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -40,14 +154,51 @@ body {
   animation: marquee 30s linear infinite;
 }
 
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 35s linear infinite;
+}
+
+/* ─── CASE CARD ─── */
 .case-card {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .case-card:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
+/* ─── 3D TILT ─── */
+.tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.tilt-card-inner {
+  transition: transform 0.4s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-card-inner .tilt-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15), transparent 60%);
+}
+
+.tilt-card:hover .tilt-shine {
+  opacity: 1;
+}
+
+/* ─── LINE REVEAL ─── */
 .line-reveal {
   overflow: hidden;
 }
@@ -61,6 +212,7 @@ body {
   to { transform: translateY(0); }
 }
 
+/* ─── NUMBER DISPLAY ─── */
 .number-display {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
@@ -68,3 +220,110 @@ body {
   line-height: 1;
   color: #0a0a0a;
 }
+
+/* ─── GRAIN TEXTURE ─── */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+}
+
+/* ─── MAGNETIC BUTTON ─── */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+}
+
+/* ─── HORIZONTAL SCROLL ─── */
+.horizontal-scroll-section {
+  overflow: hidden;
+}
+
+/* ─── PROCESS CARD ─── */
+.process-card {
+  min-width: 320px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.process-card:hover {
+  transform: translateY(-8px);
+}
+
+.process-card .process-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
+  color: #f1f1f1;
+  transition: color 0.3s;
+}
+
+.process-card:hover .process-number {
+  color: #0a0a0a;
+}
+
+/* ─── NAV HIDE/SHOW ─── */
+.nav-visible {
+  transform: translateY(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-hidden {
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── SMOOTH GRADIENT TEXT ─── */
+.gradient-text {
+  background: linear-gradient(135deg, #0a0a0a 0%, #555 50%, #0a0a0a 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 6s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 200% center; }
+}
+
+/* ─── STAGGER CHILDREN ─── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ─── GLOW DOT ─── */
+.glow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  box-shadow: 0 0 8px rgba(10, 10, 10, 0.3);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(10, 10, 10, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(10, 10, 10, 0.5); }
+}
+
+/* ─── DIVIDER LINE DRAW ─── */
+.line-draw {
+  height: 1px;
+  background: #e5e7eb;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.line-draw.visible {
+  transform: scaleX(1);
+}
+
