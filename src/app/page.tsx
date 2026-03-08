@@ -166,13 +166,13 @@ function CaseStudy({ project, index }: { project: (typeof projects)[0]; index: n
           rel="noopener noreferrer"
           className="block group"
         >
-          <div className="relative rounded-3xl overflow-hidden bg-gray-100 case-card">
+          <div className="relative rounded-3xl overflow-hidden bg-gray-100 case-card max-h-[200px] sm:max-h-[280px] lg:max-h-[360px]">
             <Image
               src={project.mockup}
               alt={`Screenshot do site ${project.title.replace("\n", " ")}`}
               width={1440}
               height={900}
-              className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+              className="w-full h-auto object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
               quality={90}
               priority={index < 2}
             />
