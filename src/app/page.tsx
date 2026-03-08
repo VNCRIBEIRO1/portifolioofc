@@ -531,12 +531,6 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -150]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const processRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: processScroll } = useScroll({
-    target: processRef,
-    offset: ["start end", "end start"],
-  });
-  const processX = useTransform(processScroll, [0, 1], ["10%", "-60%"]);
 
   /* Nav hide on scroll down, show on scroll up */
   useEffect(() => {
@@ -727,9 +721,9 @@ export default function Home() {
           ))}
         </section>
 
-        {/* ── PROCESS (Horizontal Scroll) ── */}
-        <section id="processo" ref={processRef} className="py-32 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 mb-16">
+        {/* ── PROCESS ── */}
+        <section id="processo" className="py-32 px-6">
+          <div className="max-w-7xl mx-auto">
             <Reveal>
               <span className="text-sm uppercase tracking-widest text-gray-400 font-medium inline-flex items-center gap-3">
                 <span className="w-8 h-[1px] bg-gray-300" />
@@ -739,33 +733,33 @@ export default function Home() {
                 Meu processo<span className="text-gray-300">.</span>
               </h2>
             </Reveal>
-          </div>
 
-          <motion.div style={{ x: processX }} className="flex gap-8 pl-6">
-            {processSteps.map((step, i) => (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="process-card bg-white rounded-3xl p-10 border border-gray-100 shadow-sm hover:shadow-xl min-w-[320px] sm:min-w-[380px]"
-              >
-                <span className="process-number">{step.num}</span>
-                <div className="relative w-16 h-16 mt-4 mb-3">
-                  <Image
-                    src={`/images/process/${["discovery", "strategy", "design", "code", "launch"][i]}.png`}
-                    alt={step.title}
-                    width={64}
-                    height={64}
-                    className="rounded-xl"
-                  />
-                </div>
-                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                <p className="text-gray-500 leading-relaxed text-sm">{step.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-16">
+              {processSteps.map((step, i) => (
+                <motion.div
+                  key={step.num}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="process-card bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-300"
+                >
+                  <span className="process-number">{step.num}</span>
+                  <div className="relative w-14 h-14 mt-4 mb-3">
+                    <Image
+                      src={`/images/process/${["discovery", "strategy", "design", "code", "launch"][i]}.png`}
+                      alt={step.title}
+                      width={56}
+                      height={56}
+                      className="rounded-xl"
+                    />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+                  <p className="text-gray-500 leading-relaxed text-sm">{step.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* ── ABOUT ── */}
