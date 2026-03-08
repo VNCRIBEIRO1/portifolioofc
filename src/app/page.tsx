@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 
 /* ─── DATA ─── */
@@ -121,79 +121,7 @@ const processSteps = [
   },
 ];
 
-/* ─── CUSTOM CURSOR ─── */
-function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [cursorClass, setCursorClass] = useState("");
 
-  useEffect(() => {
-    if (typeof window === "undefined" || window.innerWidth < 768) return;
-
-    let dotX = 0, dotY = 0, ringX = 0, ringY = 0;
-    let mouseX = 0, mouseY = 0;
-
-    const onMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    const animate = () => {
-      dotX += (mouseX - dotX) * 0.25;
-      dotY += (mouseY - dotY) * 0.25;
-      ringX += (mouseX - ringX) * 0.12;
-      ringY += (mouseY - ringY) * 0.12;
-
-      if (dotRef.current) {
-        dotRef.current.style.left = `${dotX}px`;
-        dotRef.current.style.top = `${dotY}px`;
-      }
-      if (ringRef.current) {
-        ringRef.current.style.left = `${ringX}px`;
-        ringRef.current.style.top = `${ringY}px`;
-      }
-      requestAnimationFrame(animate);
-    };
-
-    const addHover = () => setCursorClass("cursor-hover");
-    const removeHover = () => setCursorClass("");
-    const addText = () => setCursorClass("cursor-text");
-
-    document.addEventListener("mousemove", onMove);
-    animate();
-
-    const interactives = document.querySelectorAll("a, button, [role='button']");
-    interactives.forEach((el) => {
-      el.addEventListener("mouseenter", addHover);
-      el.addEventListener("mouseleave", removeHover);
-    });
-
-    const headings = document.querySelectorAll("h1, h2");
-    headings.forEach((el) => {
-      el.addEventListener("mouseenter", addText);
-      el.addEventListener("mouseleave", removeHover);
-    });
-
-    return () => {
-      document.removeEventListener("mousemove", onMove);
-      interactives.forEach((el) => {
-        el.removeEventListener("mouseenter", addHover);
-        el.removeEventListener("mouseleave", removeHover);
-      });
-      headings.forEach((el) => {
-        el.removeEventListener("mouseenter", addText);
-        el.removeEventListener("mouseleave", removeHover);
-      });
-    };
-  }, []);
-
-  return (
-    <div className={cursorClass}>
-      <div ref={dotRef} className="cursor-dot" />
-      <div ref={ringRef} className="cursor-ring" />
-    </div>
-  );
-}
 
 /* ─── SCROLL PROGRESS ─── */
 function ScrollProgress() {
@@ -205,32 +133,57 @@ function ScrollProgress() {
 
 /* ─── LOADING SCREEN ─── */
 function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2200);
-    return () => clearTimeout(timer);
+    const timer = setTimeout(onComplete, 2400);
+    const interval = setInterval(() => {
+      setProgress((p) => Math.min(p + Math.random() * 15, 100));
+    }, 200);
+    return () => { clearTimeout(timer); clearInterval(interval); };
   }, [onComplete]);
 
   return (
     <motion.div
       className="loading-screen"
-      exit={{ y: "-100%" }}
-      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+      exit={{ clipPath: "inset(0 0 100% 0)" }}
+      transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Image
-          src="/images/brand/logo-white.svg"
-          alt="PixelCode Studio"
-          width={140}
-          height={40}
-          className="opacity-90"
-        />
-      </motion.div>
-      <div className="loading-bar">
-        <div className="loading-bar-fill" />
+      {/* AI-generated background */}
+      <div
+        className="loading-bg"
+        style={{ backgroundImage: "url(/images/loading-bg.png)" }}
+      />
+
+      <div className="loading-content">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <Image
+            src="/images/brand/logo-white.svg"
+            alt="PixelCode Studio"
+            width={160}
+            height={45}
+            className="opacity-90"
+            priority
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex flex-col items-center gap-3"
+        >
+          <div className="loading-bar">
+            <div className="loading-bar-fill" />
+          </div>
+          <span className="loading-text">
+            {Math.round(progress)}%
+          </span>
+        </motion.div>
       </div>
     </motion.div>
   );
@@ -603,9 +556,6 @@ export default function Home() {
         {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
-      {/* Custom Cursor */}
-      <CustomCursor />
-
       {/* Scroll Progress Bar */}
       <ScrollProgress />
 
@@ -659,8 +609,18 @@ export default function Home() {
         </motion.nav>
 
         {/* ── HERO ── */}
-        <section className="min-h-screen flex items-center justify-center px-6 pt-16 overflow-hidden">
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-5xl">
+        <section className="min-h-screen flex items-center justify-center px-6 pt-16 overflow-hidden relative">
+          {/* AI-generated abstract background */}
+          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
+            <Image
+              src="/images/hero-abstract.png"
+              alt=""
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-5xl relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={!loading ? { opacity: 1, y: 0 } : {}}
@@ -792,7 +752,15 @@ export default function Home() {
                 className="process-card bg-white rounded-3xl p-10 border border-gray-100 shadow-sm hover:shadow-xl min-w-[320px] sm:min-w-[380px]"
               >
                 <span className="process-number">{step.num}</span>
-                <div className="text-3xl mt-4 mb-3">{step.icon}</div>
+                <div className="relative w-16 h-16 mt-4 mb-3">
+                  <Image
+                    src={`/images/process/${["discovery", "strategy", "design", "code", "launch"][i]}.png`}
+                    alt={step.title}
+                    width={64}
+                    height={64}
+                    className="rounded-xl"
+                  />
+                </div>
                 <h3 className="text-xl font-bold mb-3">{step.title}</h3>
                 <p className="text-gray-500 leading-relaxed text-sm">{step.desc}</p>
               </motion.div>
@@ -821,6 +789,16 @@ export default function Home() {
                     <br />
                     Ribeiro
                   </h2>
+                  <div className="mt-8 rounded-2xl overflow-hidden opacity-80">
+                    <Image
+                      src="/images/workspace.png"
+                      alt="Workspace PixelCode Studio"
+                      width={500}
+                      height={500}
+                      className="w-full h-auto object-cover rounded-2xl"
+                      quality={85}
+                    />
+                  </div>
                 </div>
                 <div className="space-y-6 flex flex-col justify-center">
                   <p className="text-lg text-gray-400 leading-relaxed">
@@ -854,8 +832,17 @@ export default function Home() {
         </section>
 
         {/* ── CONTACT ── */}
-        <section id="contato" className="py-32 px-6 relative">
-          <div className="max-w-7xl mx-auto text-center">
+        <section id="contato" className="py-32 px-6 relative overflow-hidden">
+          {/* AI-generated geometric pattern */}
+          <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
+            <Image
+              src="/images/pattern-contact.png"
+              alt=""
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="max-w-7xl mx-auto text-center relative z-10">
             <Reveal>
               <span className="text-sm uppercase tracking-widest text-gray-400 font-medium inline-flex items-center gap-3 justify-center">
                 <span className="w-8 h-[1px] bg-gray-300" />
