@@ -9,6 +9,15 @@
   --foreground: #0a0a0a;
   --accent: #0a0a0a;
   --muted: #737373;
+  /* Modular design tokens */
+  --bg: #fafafa;
+  --ink: #0a0a0a;
+  --cream: #f5efe6;
+  --rose: #f43f5e;
+  --amber: #f59e0b;
+  --emerald: #10b981;
+  --border: #ececec;
+  --border-strong: #c4c4c4;
 }
 
 html {
@@ -247,9 +256,9 @@ body {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ─── SMOOTH GRADIENT TEXT ─── */
+/* ─── SMOOTH GRADIENT TEXT (rose → ink → amber) ─── */
 .gradient-text {
-  background: linear-gradient(135deg, #0a0a0a 0%, #555 50%, #0a0a0a 100%);
+  background: linear-gradient(135deg, #f43f5e 0%, #0a0a0a 45%, #f59e0b 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
