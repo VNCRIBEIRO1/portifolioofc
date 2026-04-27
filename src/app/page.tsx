@@ -13,6 +13,7 @@ import { Nav } from "./components/sections/Nav";
 import { PromoSection } from "./components/sections/Promo";
 import { ServicesSection } from "./components/sections/Services";
 import { Showcase } from "./components/sections/Showcase";
+import { TemplatesShowcase } from "./components/sections/TemplatesShowcase";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -41,6 +42,7 @@ export default function Home() {
         <ServicesSection />
         <PromoSection />
         <Showcase />
+        <TemplatesShowcase />
         <About />
         <FinalCTA />
       </main>

@@ -26,7 +26,7 @@ export function Showcase() {
           </div>
         </Reveal>
 
-        <ul role="list" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ul role="list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p, i) => (
             <motion.li
               key={p.id}
@@ -42,8 +42,9 @@ export function Showcase() {
                   src={p.mockup}
                   alt={`Mockup do projeto ${p.title.replace(/\n/g, " ")}`}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized={p.mockup.startsWith("http")}
                 />
                 <div className="absolute top-4 left-4 flex items-center gap-2">
                   <span className="text-[10px] uppercase tracking-widest bg-white/90 backdrop-blur text-[var(--ink)] px-2.5 py-1 rounded-full font-semibold">

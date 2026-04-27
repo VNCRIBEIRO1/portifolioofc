@@ -22,6 +22,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li><a href="#servicos" className="hover:text-white/70">Serviços</a></li>
               <li><a href="#trabalhos" className="hover:text-white/70">Trabalhos</a></li>
+              <li><a href="#templates" className="hover:text-white/70">Templates</a></li>
               <li><a href="#promo" className="hover:text-white/70">Promo R$199</a></li>
               <li><a href="#sobre" className="hover:text-white/70">Sobre</a></li>
               <li><a href="#contato" className="hover:text-white/70">Contato</a></li>

@@ -9,6 +9,7 @@ import { MagneticButton } from "../primitives";
 const links = [
   { label: "Serviços", href: "#servicos" },
   { label: "Trabalhos", href: "#trabalhos" },
+  { label: "Templates", href: "#templates" },
   { label: "Promo R$199", href: "#promo", highlight: true },
   { label: "Sobre", href: "#sobre" },
   { label: "Contato", href: "#contato" },

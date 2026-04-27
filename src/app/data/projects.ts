@@ -92,6 +92,25 @@ export const projects: Project[] = [
     desktop: "/images/projects/luciana-desktop.png",
     mobile: "/images/projects/luciana-mobile.png",
   },
+  {
+    id: 5,
+    number: "05",
+    title: "Lucas Mangolin\nAdvocacia Patrimonial",
+    subtitle: "Advogado Patrimonialista",
+    description: "Site institucional com chatbot decisório para advocacia de proteção e estruturação patrimonial.",
+    challenge:
+      "Apresentar serviços de planejamento patrimonial de forma clara, transmitir autoridade e captar leads qualificados de alto ticket.",
+    solution:
+      "Single-page com CSS-only backgrounds, preloader, counter animado, chatbot decisório com typing indicator, scroll reveal e Schema.org completo.",
+    result:
+      "Performance Lighthouse 95+, SEO técnico impecável e fluxo de triagem que qualifica leads antes do primeiro contato humano.",
+    url: "https://lucasmangolin.vercel.app/",
+    tech: ["HTML5", "CSS3", "JS Vanilla", "Schema.org"],
+    category: "Direito",
+    mockup: "https://image.thum.io/get/width/1200/crop/750/noanimate/https://lucasmangolin.vercel.app/",
+    desktop: "https://image.thum.io/get/width/1600/crop/1000/noanimate/https://lucasmangolin.vercel.app/",
+    mobile: "https://image.thum.io/get/width/420/crop/900/viewportWidth/420/noanimate/https://lucasmangolin.vercel.app/",
+  },
 ];
 
 export const processSteps = [
