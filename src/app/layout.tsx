@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "PixelCode Studio | Sites, Landing Pages, Automações e CRM",
   description:
-    "Studio de Vinícius Ribeiro. Criamos sites, landing pages, chatbots, automações e CRMs sob medida. Promo de fim de mês: site para advocacia por R$ 199 — só até 29/04.",
+    "Estúdio de Vinícius Ribeiro. Sites institucionais, landing pages, chatbots, automações e CRMs sob medida — foco em conversão real. Promoção de abril: site para advocacia por R$ 199, só até 29/04.",
   keywords: [
     "criação de sites",
     "landing page",

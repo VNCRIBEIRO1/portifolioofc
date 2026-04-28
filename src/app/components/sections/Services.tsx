@@ -49,7 +49,7 @@ function ServiceCard({ s, index, total }: { s: Service; index: number; total: nu
           data-cursor-label="Contratar"
           className="inline-flex items-center gap-2 text-sm text-white hover:text-rose-400 transition-colors group/cta"
         >
-          <span className="border-b border-white/20 group-hover/cta:border-rose-400 pb-0.5">orçar este serviço</span>
+          <span className="border-b border-white/20 group-hover/cta:border-rose-400 pb-0.5">Orçar este serviço</span>
           <span className="transition-transform group-hover/cta:translate-x-1">→</span>
         </a>
       </div>
@@ -98,12 +98,12 @@ export function ServicesSection() {
                 /serviços · capabilities
               </span>
               <h2 className="font-display font-bold leading-[0.9] tracking-[-0.04em]" style={{ fontSize: "clamp(2.75rem, 8vw, 7rem)" }}>
-                serviços que<br />
-                <span className="italic text-white/95">deixam <span className="gradient-text">marca.</span></span>
+                Serviços feitos<br />
+                <span className="italic text-white/95">para <span className="gradient-text">converter.</span></span>
               </h2>
             </div>
-            <p className="lg:col-span-4 text-white/55 text-[15px] leading-relaxed">
-              Do briefing à entrega — sob medida. Sem pacote pronto, sem mensalidade escondida, sem template. Cada projeto começa em folha em branco.
+            <p className="lg:col-span-4 text-white/65 text-[15px] leading-relaxed">
+              Do briefing à entrega, sob medida. Sem pacote pronto, sem mensalidade escondida, sem template recortado. Cada projeto começa em folha em branco e termina em métrica de negócio.
             </p>
           </div>
         </Reveal>
@@ -155,7 +155,7 @@ export function ServicesSection() {
             data-cursor-label="Promo"
             className="text-white/70 hover:text-rose-400 transition normal-case tracking-normal font-sans text-sm border-b border-white/15 hover:border-rose-400 pb-0.5"
           >
-            ver oferta de abril →
+            Ver oferta de abril →
           </Link>
         </div>
       </div>

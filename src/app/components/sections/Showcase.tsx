@@ -26,13 +26,13 @@ export function Showcase() {
                 <span className="w-8 h-[1px] bg-white/20" />
                 /trabalhos selecionados · 2024–2026
               </span>
-              <h2 className="font-display text-5xl sm:text-7xl lg:text-[8rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em] lowercase">
-                estudos em <br />
-                <span className="gradient-text italic">conversão.</span>
+              <h2 className="font-display text-5xl sm:text-7xl lg:text-[8rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em]">
+                Casos reais.<br />
+                <span className="gradient-text italic">Resultados mensuráveis.</span>
               </h2>
             </div>
-            <p className="text-white/55 max-w-md text-base lg:text-right font-light leading-relaxed">
-              Sites institucionais, landings de campanha e plataformas — cada projeto com um único objetivo, executado até o fim. Passe o cursor para visualizar a peça.
+            <p className="text-white/65 max-w-md text-base lg:text-right font-light leading-relaxed">
+              Sites institucionais, landings de campanha e plataformas sob medida — cada projeto com um objetivo claro, entregue do briefing à métrica. Passe o cursor para visualizar a peça.
             </p>
           </div>
         </Reveal>

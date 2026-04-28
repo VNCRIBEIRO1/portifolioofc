@@ -42,12 +42,12 @@ export function TemplatesShowcase() {
                 <span className="w-8 h-[1px] bg-white/20" />
                 /catálogo · 25 templates prontos
               </span>
-              <h2 className="font-display text-5xl sm:text-7xl lg:text-[8rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em] lowercase">
-                escolha um <br />
+              <h2 className="font-display text-5xl sm:text-7xl lg:text-[8rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em]">
+                Encontre seu <br />
                 <span className="gradient-text italic">ponto de partida.</span>
               </h2>
-              <p className="text-white/55 mt-6 max-w-2xl font-light leading-relaxed">
-                Designs profissionais para Advocacia, Saúde e Psicologia — cada um personalizável com a sua marca, conteúdo e domínio. Entrega em 5 a 10 dias úteis.
+              <p className="text-white/65 mt-6 max-w-2xl font-light leading-relaxed">
+                Designs profissionais para Advocacia, Saúde e Psicologia — cada template personalizado com a sua marca, conteúdo e domínio. Entrega em 5 a 10 dias úteis.
               </p>
             </div>
             <a
@@ -154,8 +154,8 @@ export function TemplatesShowcase() {
         )}
 
         <div className="mt-20 rounded-3xl border border-white/10 bg-gradient-to-br from-rose-500/10 to-amber-500/10 p-10 sm:p-14 text-center">
-          <h3 className="font-display text-3xl sm:text-5xl font-bold text-white tracking-tight lowercase">
-            não achou o que queria?
+          <h3 className="font-display text-3xl sm:text-5xl font-bold text-white tracking-tight">
+            Não achou o que queria?
           </h3>
           <p className="text-white/65 mt-4 max-w-xl mx-auto leading-relaxed">
             Cada template é totalmente personalizável. Se preferir algo 100% sob medida, eu desenho do zero — folha em branco, briefing seu.

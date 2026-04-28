@@ -717,6 +717,14 @@ body {
   overflow: hidden;
   font-family: 'Inter', sans-serif;
 }
+.mock-browser {
+  background: #fff;
+  color: #0a0a0a;
+  border-radius: 10px;
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
 .mock-bar {
   display: flex;
   align-items: center;

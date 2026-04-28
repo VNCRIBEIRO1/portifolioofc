@@ -20,9 +20,9 @@ export function Footer() {
         >
           <div className="text-[10px] uppercase tracking-[0.3em] text-white/55 font-mono mb-6 inline-flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            agenda aberta · abril 2026
+            Agenda aberta · Abril 2026
           </div>
-          <div className="big-link">vamos conversar.</div>
+          <div className="big-link">Vamos conversar.</div>
         </a>
 
         {/* Contact mega row */}
@@ -47,8 +47,8 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-5">
               <Image src="/images/brand/logo-white.svg" alt={COMPANY_NAME} width={140} height={40} />
             </div>
-            <p className="text-white/55 text-sm leading-relaxed max-w-md">
-              Studio independente. Sites, landings, automações e CRMs sob medida — focados em uma métrica só: conversão real. Atendimento direto com o fundador.
+            <p className="text-white/70 text-sm leading-relaxed max-w-md">
+              Estúdio independente especializado em sites, landing pages, automações e CRMs sob medida. Foco em uma métrica que importa: <span className="text-white">conversão real</span>. Atendimento direto com o fundador, do briefing à entrega.
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/55 mb-4 font-mono">Studio · São Paulo</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/55 mb-4 font-mono">Estúdio · São Paulo</h4>
             <div className="text-sm text-white/70 space-y-2.5">
               <div className="font-mono tabular-nums text-white">
                 <SaoPauloClock /> · BRT
@@ -78,10 +78,10 @@ export function Footer() {
 
         {/* Marquee strip */}
         <div className="overflow-hidden py-8 border-b border-white/10">
-          <div className="animate-marquee flex whitespace-nowrap font-display text-3xl font-bold text-white/30">
+          <div className="animate-marquee flex whitespace-nowrap font-display text-3xl font-bold text-white/40">
             {[...Array(3)].map((_, i) => (
               <span key={i} className="flex items-center">
-                {["sites que vendem", "·", "landings de conversão", "·", "automações", "·", "CRMs sob medida", "·", "chatbots IA", "·"].map((t, j) => (
+                {["Sites que convertem", "·", "Landing pages de campanha", "·", "Automações", "·", "CRMs sob medida", "·", "Chatbots com IA", "·"].map((t, j) => (
                   <span key={j} className="mx-6">{t}</span>
                 ))}
               </span>
