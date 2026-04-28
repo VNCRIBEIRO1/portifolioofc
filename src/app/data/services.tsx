@@ -1,9 +1,14 @@
 import type { ReactNode } from "react";
 
 export type Service = {
+  key: "site" | "landing" | "automation" | "crm" | "chatbot" | "branding";
+  prefix: string;
   title: string;
+  tagline: string;
   description: string;
   bullets: string[];
+  featured?: boolean;
+  badge?: string;
   icon: ReactNode;
 };
 
@@ -11,10 +16,15 @@ const stroke = "1.5";
 
 export const services: Service[] = [
   {
-    title: "Websites Profissionais",
+    key: "site",
+    prefix: "/01",
+    title: "site institucional",
+    tagline: "presença que sustenta credibilidade.",
     description:
-      "Sites institucionais rápidos, otimizados para SEO e 100% responsivos. Ideais para escritórios, clínicas e empresas que precisam de credibilidade online.",
-    bullets: ["SEO técnico", "Mobile-first", "LGPD pronto", "Lighthouse 90+"],
+      "Não é vitrine. É a primeira impressão que fecha contrato — arquitetura de informação enxuta, performance Lighthouse 90+ e SEO técnico que coloca seu nome onde o cliente procura.",
+    bullets: ["arquitetura editorial", "mobile-first real", "SEO técnico", "LGPD pronto"],
+    featured: true,
+    badge: "MAIS PEDIDO",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="14" rx="2" /><path d="M3 9h18" /><path d="M9 22h6" /><path d="M12 18v4" />
@@ -22,10 +32,13 @@ export const services: Service[] = [
     ),
   },
   {
-    title: "Landing Pages que vendem",
+    key: "landing",
+    prefix: "/02",
+    title: "landing page",
+    tagline: "uma página, um objetivo: converter.",
     description:
-      "Páginas focadas em capturar leads e converter. Copy persuasivo, animações suaves e formulário direto no WhatsApp.",
-    bullets: ["Copy persuasivo", "Pixel + GA4", "Form WhatsApp", "A/B test ready"],
+      "Copy persuasivo, hierarquia visual decidida no milímetro e formulário direto no WhatsApp. Pronta para Google Ads, Meta e qualquer mídia paga sem desperdício de verba.",
+    bullets: ["copy de conversão", "Pixel + GA4", "form WhatsApp", "A/B test ready"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -33,32 +46,14 @@ export const services: Service[] = [
     ),
   },
   {
-    title: "Automações & Bots",
+    key: "chatbot",
+    prefix: "/03",
+    title: "chatbot com IA",
+    tagline: "atendimento que não dorme.",
     description:
-      "Integrações WhatsApp, e-mail, Sheets e APIs que tiram tarefas repetitivas das suas mãos e aumentam a produtividade.",
-    bullets: ["WhatsApp Business", "Sheets / Notion", "Webhooks", "n8n / Make"],
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Sistemas & CRM sob medida",
-    description:
-      "Plataformas web personalizadas para gestão de clientes, agendamentos, financeiro e relatórios — sem amarras de plataformas prontas.",
-    bullets: ["Painel admin", "Multi-usuário", "Relatórios", "API REST"],
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
-      </svg>
-    ),
-  },
-  {
-    title: "Chatbots com IA",
-    description:
-      "Atendimento 24/7 integrado ao site e WhatsApp, com triagem automática de leads e respostas treinadas no seu negócio.",
-    bullets: ["Triagem 24/7", "WhatsApp", "Treinado no seu negócio", "Painel de leads"],
+      "Triagem 24/7 integrada ao site e WhatsApp, treinada no seu tom de voz e nas suas regras de negócio. Lead qualificado chega no painel; o resto, o bot resolve.",
+    bullets: ["triagem 24/7", "WhatsApp Business", "treinado no seu negócio", "painel de leads"],
+    badge: "IA NATIVA",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><circle cx="9" cy="10" r="1" /><circle cx="15" cy="10" r="1" />
@@ -66,10 +61,41 @@ export const services: Service[] = [
     ),
   },
   {
-    title: "Identidade Visual & Logo",
+    key: "automation",
+    prefix: "/04",
+    title: "automação & integrações",
+    tagline: "tarefa repetitiva é desperdício.",
     description:
-      "Logos, paleta e branding para quem está começando ou rebrandando. Entrega em vetor + arquivos prontos para web e impressão.",
-    bullets: ["Logo vetorial", "Paleta + tipografia", "Manual da marca", "Mockups"],
+      "WhatsApp, e-mail, Sheets, Notion, APIs internas — conectamos tudo. Você ganha horas semanais e dados que param de se perder entre planilhas.",
+    bullets: ["n8n / Make", "webhooks REST", "Sheets / Notion", "fluxos custom"],
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" /><path d="M12 1v6m0 10v6m11-11h-6M7 12H1" />
+      </svg>
+    ),
+  },
+  {
+    key: "crm",
+    prefix: "/05",
+    title: "sistema sob medida",
+    tagline: "o software que sua planilha queria ser.",
+    description:
+      "CRM, agenda, financeiro, relatório executivo — construído na régua do seu processo, sem licença mensal nem teto de usuários. Você dono dos dados, dono do código.",
+    bullets: ["painel admin", "multi-usuário", "relatórios", "API REST"],
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    key: "branding",
+    prefix: "/06",
+    title: "identidade visual",
+    tagline: "marca que sustenta preço.",
+    description:
+      "Logo vetorial, paleta, tipografia e manual da marca pensados para o digital primeiro, impressão depois. Entrega com mockups prontos para apresentar ao seu cliente.",
+    bullets: ["logo vetorial", "paleta + tipografia", "manual da marca", "mockups"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
         <circle cx="13.5" cy="6.5" r="2.5" /><circle cx="19" cy="13" r="2.5" /><circle cx="6" cy="12" r="2.5" /><circle cx="10" cy="19" r="2.5" /><path d="M12 2a10 10 0 1 0 10 10" />
@@ -79,13 +105,13 @@ export const services: Service[] = [
 ];
 
 export const promoBenefits = [
-  { icon: "🎯", title: "Site 100% personalizado", desc: "Sem templates engessados — cada projeto recebe identidade própria." },
-  { icon: "💬", title: "Chatbot integrado", desc: "Triagem 24/7 que filtra e qualifica novos clientes pelo WhatsApp." },
-  { icon: "🔍", title: "SEO Google + Maps", desc: "Para aparecer quando o cliente procurar advogado na sua cidade." },
-  { icon: "🎨", title: "Logo grátis", desc: "Não tem logotipo? A gente cria, sem custo extra." },
-  { icon: "🤖", title: "Fotos tratadas com IA", desc: "Suas fotos de perfil e do escritório ficam profissionais." },
-  { icon: "♾️", title: "Hospedagem vitalícia", desc: "Sem mensalidade. Pagamento único, hospedagem por nossa conta." },
-  { icon: "🛠️", title: "30 dias de ajustes", desc: "Modificações ilimitadas após a entrega para deixar do seu jeito." },
+  { icon: "🎯", title: "Site 100% personalizado", desc: "Sem template engessado. Cada projeto recebe identidade própria, do tipo de letra ao espaçamento." },
+  { icon: "💬", title: "Chatbot integrado", desc: "Triagem 24/7 que filtra e qualifica novos clientes direto no WhatsApp." },
+  { icon: "🔍", title: "SEO Google + Maps", desc: "Para aparecer quando buscarem advogado na sua cidade — não na próxima página." },
+  { icon: "🎨", title: "Logo grátis", desc: "Não tem identidade visual? A gente cria, sem custo extra." },
+  { icon: "🤖", title: "Fotos tratadas com IA", desc: "Suas fotos de perfil e do escritório saem do amador para o profissional." },
+  { icon: "♾️", title: "Hospedagem vitalícia", desc: "Sem mensalidade. Pagamento único e a hospedagem fica por nossa conta." },
+  { icon: "🛠️", title: "30 dias de ajustes", desc: "Modificações ilimitadas após a entrega para deixar exatamente do seu jeito." },
   { icon: "⚖️", title: "OAB 205/2021", desc: "Conformidade total com as regras de publicidade da advocacia." },
 ];
 

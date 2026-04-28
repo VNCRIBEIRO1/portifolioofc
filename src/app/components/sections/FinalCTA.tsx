@@ -14,15 +14,15 @@ export function FinalCTA() {
         <Reveal>
           <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
             <span className="w-8 h-[1px] bg-white/20" />
-            Vamos conversar
+            /vamos conversar
             <span className="w-8 h-[1px] bg-white/20" />
           </span>
-          <h2 className="font-display text-[clamp(3rem,11vw,10rem)] font-bold leading-[0.9] mt-8 tracking-[-0.04em]">
-            Bora começar <br />
-            <span className="gradient-text italic">o seu projeto?</span>
+          <h2 className="font-display text-[clamp(3rem,11vw,10rem)] font-bold leading-[0.9] mt-8 tracking-[-0.04em] lowercase">
+            o próximo projeto<br />
+            <span className="gradient-text italic">é o seu.</span>
           </h2>
-          <p className="text-white/50 text-lg max-w-xl mx-auto mt-8 font-light leading-relaxed">
-            Resposta em até 24h úteis. Orçamento gratuito e sem compromisso. Quanto antes a gente conversa, antes você fica online.
+          <p className="text-white/55 text-lg max-w-xl mx-auto mt-8 font-light leading-relaxed">
+            Resposta em até 24h úteis. Orçamento gratuito, sem compromisso e sem mensalidade escondida. Quanto antes a gente conversa, antes você fica online.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-12">
@@ -36,7 +36,7 @@ export function FinalCTA() {
                 className="inline-flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-rose-500 text-white font-semibold hover:bg-rose-400 transition-colors shadow-[0_20px_60px_-15px_rgba(244,63,94,0.5)]"
               >
                 <WhatsAppIcon className="w-4 h-4" />
-                Chamar no WhatsApp
+                chamar no WhatsApp
               </MagneticButton>
             </MagneticCard>
             <MagneticCard>

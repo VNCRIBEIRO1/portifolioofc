@@ -20,9 +20,9 @@ export function Footer() {
         >
           <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mb-6 inline-flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Disponível pra novos projetos
+            agenda aberta · abril 2026
           </div>
-          <div className="big-link">Vamos conversar.</div>
+          <div className="big-link">vamos conversar.</div>
         </a>
 
         {/* Contact mega row */}
@@ -47,20 +47,20 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-5">
               <Image src="/images/brand/logo-white.svg" alt={COMPANY_NAME} width={140} height={40} />
             </div>
-            <p className="text-white/50 text-sm leading-relaxed max-w-md">
-              Studio independente. Sites, landings, automações e CRMs sob medida — focados em conversão real. Atendimento direto com o fundador.
+            <p className="text-white/55 text-sm leading-relaxed max-w-md">
+              Studio independente. Sites, landings, automações e CRMs sob medida — focados em uma métrica só: conversão real. Atendimento direto com o fundador.
             </p>
           </div>
 
           <div>
             <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-4 font-mono">Navegar</h4>
             <ul className="space-y-2.5 text-sm">
-              <li><a href="#servicos" className="text-white/70 hover:text-white transition-colors">Serviços</a></li>
-              <li><a href="#trabalhos" className="text-white/70 hover:text-white transition-colors">Trabalhos</a></li>
-              <li><a href="#templates" className="text-white/70 hover:text-white transition-colors">Templates</a></li>
-              <li><a href="#promo" className="text-rose-400 hover:text-rose-300 transition-colors">Promo R$199</a></li>
-              <li><a href="#sobre" className="text-white/70 hover:text-white transition-colors">Sobre</a></li>
-              <li><a href="#contato" className="text-white/70 hover:text-white transition-colors">Contato</a></li>
+              <li><a href="#servicos" className="text-white/70 hover:text-white transition-colors">serviços</a></li>
+              <li><a href="#trabalhos" className="text-white/70 hover:text-white transition-colors">trabalhos</a></li>
+              <li><a href="#templates" className="text-white/70 hover:text-white transition-colors">templates</a></li>
+              <li><a href="#promo" className="text-rose-400 hover:text-rose-300 transition-colors">promo R$199</a></li>
+              <li><a href="#sobre" className="text-white/70 hover:text-white transition-colors">sobre</a></li>
+              <li><a href="#contato" className="text-white/70 hover:text-white transition-colors">contato</a></li>
             </ul>
           </div>
 
@@ -81,7 +81,7 @@ export function Footer() {
           <div className="animate-marquee flex whitespace-nowrap font-display text-3xl font-bold text-white/30">
             {[...Array(3)].map((_, i) => (
               <span key={i} className="flex items-center">
-                {["Sites que vendem", "·", "Landing pages", "·", "Automações", "·", "CRMs sob medida", "·", "Chatbots", "·"].map((t, j) => (
+                {["sites que vendem", "·", "landings de conversão", "·", "automações", "·", "CRMs sob medida", "·", "chatbots IA", "·"].map((t, j) => (
                   <span key={j} className="mx-6">{t}</span>
                 ))}
               </span>

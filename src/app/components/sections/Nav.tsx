@@ -7,12 +7,12 @@ import { WA_LINK } from "../../lib/constants";
 import { MagneticButton } from "../primitives";
 
 const links = [
-  { label: "Serviços", href: "#servicos" },
-  { label: "Trabalhos", href: "#trabalhos" },
-  { label: "Templates", href: "#templates" },
-  { label: "Promo R$199", href: "#promo", highlight: true },
-  { label: "Sobre", href: "#sobre" },
-  { label: "Contato", href: "#contato" },
+  { label: "serviços", href: "#servicos" },
+  { label: "trabalhos", href: "#trabalhos" },
+  { label: "templates", href: "#templates" },
+  { label: "promo R$199", href: "#promo", highlight: true },
+  { label: "sobre", href: "#sobre" },
+  { label: "contato", href: "#contato" },
 ];
 
 export function Nav() {
@@ -73,7 +73,7 @@ export function Nav() {
           data-cursor-label="WhatsApp"
           className="hidden md:inline-block px-5 py-2 rounded-full bg-white text-black text-sm font-semibold hover:bg-rose-500 hover:text-white transition-colors"
         >
-          Falar agora
+          falar agora
         </MagneticButton>
 
         <button
@@ -105,7 +105,7 @@ export function Nav() {
             onClick={() => setOpen(false)}
             className="mt-2 text-center px-5 py-3 rounded-full bg-rose-500 text-white text-sm font-semibold"
           >
-            Falar no WhatsApp
+            falar no WhatsApp
           </a>
         </div>
       )}

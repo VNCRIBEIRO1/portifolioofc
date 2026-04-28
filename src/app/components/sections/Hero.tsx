@@ -26,7 +26,7 @@ export function Hero({ loading }: { loading: boolean }) {
         >
           <span className="inline-flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Disponível · 2026
+            agenda aberta · abril 2026
           </span>
           <span className="hidden md:inline-flex items-center gap-2">
             São Paulo · <SaoPauloClock />
@@ -42,7 +42,7 @@ export function Hero({ loading }: { loading: boolean }) {
                 transition={{ duration: 1, delay: 2.5, ease: [0.25, 1, 0.5, 1] }}
                 className="block"
               >
-                <ScrambleText text="Sites que" trigger="mount" delay={2700} />
+                <ScrambleText text="sites que" trigger="mount" delay={2700} />
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 60 }}
@@ -50,7 +50,7 @@ export function Hero({ loading }: { loading: boolean }) {
                 transition={{ duration: 1, delay: 2.7, ease: [0.25, 1, 0.5, 1] }}
                 className="block gradient-text italic"
               >
-                <ScrambleText text="vendem." trigger="mount" delay={2900} />
+                <ScrambleText text="vendem sem gritar." trigger="mount" delay={2900} />
               </motion.span>
             </>
           )}
@@ -63,8 +63,8 @@ export function Hero({ loading }: { loading: boolean }) {
             transition={{ duration: 0.8, delay: 3.2 }}
             className="lg:col-span-6 lg:col-start-1"
           >
-            <p className="text-white/60 text-lg sm:text-xl leading-relaxed font-light max-w-xl">
-              Studio independente de Vinícius Ribeiro. Construo sites, landings, automações e CRMs sob medida — focados em conversão real, com estética cinematográfica e código performático.
+            <p className="text-white/65 text-lg sm:text-xl leading-relaxed font-light max-w-xl">
+              Studio independente de Vinícius Ribeiro. Sites, landings, automações e CRMs construídos um a um — desenho cinematográfico, código performático e foco em uma coisa só: trazer cliente.
             </p>
           </motion.div>
 
@@ -84,7 +84,7 @@ export function Hero({ loading }: { loading: boolean }) {
                 className="w-full px-7 py-5 rounded-full bg-rose-500 text-white font-semibold hover:bg-rose-400 transition-colors inline-flex items-center justify-center gap-2 shadow-[0_20px_60px_-15px_rgba(244,63,94,0.5)]"
               >
                 <WhatsAppIcon className="w-4 h-4" />
-                Iniciar projeto
+                iniciar projeto
               </MagneticButton>
             </MagneticCard>
             <MagneticCard className="flex-1">
@@ -94,7 +94,7 @@ export function Hero({ loading }: { loading: boolean }) {
                 data-cursor-label="Ver"
                 className="w-full px-7 py-5 rounded-full border border-white/20 text-white font-medium hover:border-white hover:bg-white hover:text-black transition-all inline-flex items-center justify-center"
               >
-                Ver trabalhos →
+                ver trabalhos →
               </MagneticButton>
             </MagneticCard>
           </motion.div>
