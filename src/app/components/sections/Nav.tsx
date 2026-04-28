@@ -43,7 +43,7 @@ export function Nav() {
         <a href="#" className="flex items-center gap-3" aria-label="PixelCode Studio — início" data-cursor="hover">
           <Image src="/images/brand/icon.svg" alt="" width={32} height={32} className="rounded-lg invert" />
           <span className="font-semibold text-white text-sm tracking-tight">
-            PixelCode <span className="text-white/40 font-normal">· Vinícius Ribeiro</span>
+            PixelCode <span className="text-white/55 font-normal">· Vinícius Ribeiro</span>
           </span>
         </a>
 

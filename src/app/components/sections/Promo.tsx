@@ -100,7 +100,7 @@ export function PromoSection() {
                       data-cursor="hover"
                     >
                       <span className="font-medium text-white text-sm">{item.q}</span>
-                      <span className="text-white/40 text-lg leading-none" aria-hidden="true">
+                      <span className="text-white/55 text-lg leading-none" aria-hidden="true">
                         {openFaq === i ? "−" : "+"}
                       </span>
                     </button>

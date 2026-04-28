@@ -6,7 +6,7 @@ export function Marquee() {
           <span key={i} className="flex items-center">
             {["sites que vendem", "landing de conversão", "automação", "CRM sob medida", "chatbot com IA", "identidade visual", "SEO técnico", "performance"].map((t, j) => (
               <span key={j} className="flex items-center">
-                <span className="text-sm font-medium text-white/40 mx-8 uppercase tracking-[0.2em]">{t}</span>
+                <span className="text-sm font-medium text-white/55 mx-8 uppercase tracking-[0.2em]">{t}</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
               </span>
             ))}
@@ -18,7 +18,7 @@ export function Marquee() {
           <span key={i} className="flex items-center">
             {["Next.js", "TypeScript", "Figma", "Vercel", "GSAP", "Lottie", "Lenis", "LGPD"].map((t, j) => (
               <span key={j} className="flex items-center">
-                <span className="text-xs text-white/30 mx-8 uppercase tracking-[0.25em]">{t}</span>
+                <span className="text-xs text-white/55 mx-8 uppercase tracking-[0.25em]">{t}</span>
                 <span className="w-1 h-1 rounded-full bg-white/20" />
               </span>
             ))}

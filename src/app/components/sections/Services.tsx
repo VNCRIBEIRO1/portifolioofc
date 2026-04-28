@@ -25,7 +25,7 @@ function ServiceCard({ s, index, total }: { s: Service; index: number; total: nu
         </div>
       )}
       <div className="p-6 sm:p-7 relative">
-        <div className="flex items-baseline justify-between mb-3 text-xs font-mono text-white/40">
+        <div className="flex items-baseline justify-between mb-3 text-xs font-mono text-white/55">
           <span>{s.prefix}</span>
           <span>{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         </div>
@@ -93,7 +93,7 @@ export function ServicesSection() {
         <Reveal>
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 mb-12 lg:mb-16 items-end">
             <div className="lg:col-span-8">
-              <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3 mb-6">
+              <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3 mb-6">
                 <span className="w-8 h-[1px] bg-white/20" />
                 /serviços · capabilities
               </span>
@@ -109,7 +109,7 @@ export function ServicesSection() {
         </Reveal>
 
         <div className="hidden md:flex items-center justify-between mb-6 gap-6">
-          <div className="flex items-center gap-4 text-xs font-mono text-white/40 uppercase tracking-[0.25em]">
+          <div className="flex items-center gap-4 text-xs font-mono text-white/55 uppercase tracking-[0.25em]">
             <span className="text-white/80 font-semibold">{String(activeIdx + 1).padStart(2, "0")}</span>
             <div className="svc-rail-progress" style={{ ["--p" as string]: `${Math.max(8, progress * 100)}%` }}>
               <span />
@@ -146,7 +146,7 @@ export function ServicesSection() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-white/35 uppercase tracking-[0.25em]">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-white/55 uppercase tracking-[0.25em]">
           <span className="md:hidden">↔ deslize para o lado</span>
           <span className="hidden md:inline">arraste · scroll · setas</span>
           <Link

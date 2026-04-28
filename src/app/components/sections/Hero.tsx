@@ -22,7 +22,7 @@ export function Hero({ loading }: { loading: boolean }) {
           initial={{ opacity: 0, y: 20 }}
           animate={!loading ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 2.4 }}
-          className="flex items-center justify-between mb-12 text-xs uppercase tracking-[0.3em] text-white/40 font-mono"
+          className="flex items-center justify-between mb-12 text-xs uppercase tracking-[0.3em] text-white/55 font-mono"
         >
           <span className="inline-flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -104,7 +104,7 @@ export function Hero({ loading }: { loading: boolean }) {
           initial={{ opacity: 0 }}
           animate={!loading ? { opacity: 1 } : {}}
           transition={{ delay: 3.6 }}
-          className="mt-20 pt-8 border-t border-white/10 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.25em] text-white/40 font-mono"
+          className="mt-20 pt-8 border-t border-white/10 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.25em] text-white/55 font-mono"
         >
           <span>Figma · Webflow · Next.js</span>
           <span className="opacity-30">/</span>

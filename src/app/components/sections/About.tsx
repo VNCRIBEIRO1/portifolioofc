@@ -19,13 +19,13 @@ export function About() {
       <div className="max-w-[1500px] mx-auto relative grid lg:grid-cols-12 gap-14 items-start">
         <div className="lg:col-span-7 lg:sticky lg:top-32">
           <Reveal>
-            <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+            <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3">
               <span className="w-8 h-[1px] bg-white/20" />
               /sobre · 01
             </span>
-            <h2 className="font-display text-5xl sm:text-7xl lg:text-[7rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em] lowercase">
-              {FOUNDER.split(" ")[0].toLowerCase()} <br />
-              <span className="gradient-text italic">{FOUNDER.split(" ").slice(1).join(" ").toLowerCase()}.</span>
+            <h2 className="font-display text-5xl sm:text-7xl lg:text-[7rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em]">
+              {FOUNDER.split(" ")[0]} <br />
+              <span className="gradient-text italic">{FOUNDER.split(" ").slice(1).join(" ")}.</span>
             </h2>
             <p className="text-white/65 text-lg mt-8 leading-relaxed font-light max-w-xl">
               Desenvolvedor full-stack e fundador da {COMPANY_NAME}. Transformo briefing em produto digital — código limpo, UX pensada e cada pixel ajustado para que o site faça uma coisa só: <span className="text-white">trazer cliente.</span>
@@ -40,7 +40,7 @@ export function About() {
                   <div className="font-display huge-number text-[clamp(2.5rem,5vw,4.5rem)] font-bold text-white tabular-nums leading-none">
                     <AnimatedCounter target={s.value} suffix={s.suffix} />
                   </div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/40 mt-2 font-mono">{s.label}</div>
+                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/55 mt-2 font-mono">{s.label}</div>
                 </li>
               ))}
             </ul>
@@ -80,7 +80,7 @@ export function About() {
 
           <Reveal delay={0.2}>
             <div className="rounded-3xl border border-white/10 bg-[var(--bg-soft)] p-7">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mb-3">Stack que uso</div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-white/55 font-mono mb-3">Stack que uso</div>
               <div className="flex flex-wrap gap-2">
                 {["Figma", "Webflow", "Next.js", "TypeScript", "Tailwind", "GSAP", "Framer Motion", "Lottie", "Lenis", "Vercel"].map((t) => (
                   <span key={t} className="text-xs uppercase tracking-wider text-white/70 border border-white/10 rounded-full px-3 py-1.5">
@@ -97,7 +97,7 @@ export function About() {
               <p className="text-white/85 leading-relaxed font-display italic text-lg">
                 &ldquo;site bonito que não vende é portfólio. eu construo ferramentas de venda.&rdquo;
               </p>
-              <div className="mt-3 text-xs text-white/40">— {FOUNDER}</div>
+              <div className="mt-3 text-xs text-white/55">— {FOUNDER}</div>
             </div>
           </Reveal>
         </div>

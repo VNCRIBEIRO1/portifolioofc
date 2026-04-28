@@ -18,7 +18,7 @@ export function Footer() {
           data-cursor-label="WhatsApp"
           className="block group"
         >
-          <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mb-6 inline-flex items-center gap-3">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-white/55 font-mono mb-6 inline-flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             agenda aberta · abril 2026
           </div>
@@ -28,13 +28,13 @@ export function Footer() {
         {/* Contact mega row */}
         <div className="mt-16 grid lg:grid-cols-2 gap-10 pb-16 border-b border-white/10">
           <div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mb-3">Email</div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-white/55 font-mono mb-3">Email</div>
             <a href={`mailto:${EMAIL}`} className="text-2xl sm:text-4xl font-display font-bold hover:text-rose-400 transition-colors break-all">
               {EMAIL}
             </a>
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono mb-3">Telefone · WhatsApp</div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-white/55 font-mono mb-3">Telefone · WhatsApp</div>
             <a href={`tel:+5518996311933`} className="text-2xl sm:text-4xl font-display font-bold hover:text-rose-400 transition-colors">
               {PHONE_PRETTY}
             </a>
@@ -53,7 +53,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-4 font-mono">Navegar</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/55 mb-4 font-mono">Navegar</h4>
             <ul className="space-y-2.5 text-sm">
               <li><a href="#servicos" className="text-white/70 hover:text-white transition-colors">serviços</a></li>
               <li><a href="#trabalhos" className="text-white/70 hover:text-white transition-colors">trabalhos</a></li>
@@ -65,7 +65,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-4 font-mono">Studio · São Paulo</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.3em] text-white/55 mb-4 font-mono">Studio · São Paulo</h4>
             <div className="text-sm text-white/70 space-y-2.5">
               <div className="font-mono tabular-nums text-white">
                 <SaoPauloClock /> · BRT
@@ -90,7 +90,7 @@ export function Footer() {
         </div>
 
         {/* Legal */}
-        <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-between text-[11px] text-white/40 font-mono uppercase tracking-wider">
+        <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-between text-[11px] text-white/55 font-mono uppercase tracking-wider">
           <div>© {year} {COMPANY_NAME} · CNPJ {CNPJ_FMT}</div>
           <div>Feito com cuidado em São Paulo</div>
         </div>

@@ -234,13 +234,13 @@ export function HoverSwapList({ items, onCta }: {
           data-cursor-label="Ver"
         >
           <div className="flex items-center gap-6 lg:gap-12 flex-1">
-            <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono w-12">{it.eyebrow}</span>
+            <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono w-12">{it.eyebrow}</span>
             <h3 className="text-3xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-[0.95]">
               {it.title}
             </h3>
           </div>
           <div className="flex items-center gap-4 shrink-0 pl-6">
-            <span className="hidden md:block text-xs uppercase tracking-[0.2em] text-white/40">{it.meta}</span>
+            <span className="hidden md:block text-xs uppercase tracking-[0.2em] text-white/55">{it.meta}</span>
             <span className="swap-arrow text-2xl">→</span>
           </div>
         </a>
@@ -270,7 +270,7 @@ export function StackedCards({ cards }: { cards: { title: string; body: string; 
           className="stack-card p-8 md:p-12 mb-6"
           style={{ top: `${80 + i * 24}px`, scale: `${1 - (cards.length - 1 - i) * 0.03}` as any }}
         >
-          <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono">{c.tag}</span>
+          <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono">{c.tag}</span>
           <h3 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">{c.title}</h3>
           <p className="mt-4 text-white/60 text-lg max-w-2xl">{c.body}</p>
         </div>

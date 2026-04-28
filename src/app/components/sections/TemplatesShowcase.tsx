@@ -38,7 +38,7 @@ export function TemplatesShowcase() {
         <Reveal>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16">
             <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+              <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3">
                 <span className="w-8 h-[1px] bg-white/20" />
                 /catálogo · 25 templates prontos
               </span>
@@ -117,9 +117,9 @@ export function TemplatesShowcase() {
                     <div className="p-5">
                       <div className="flex items-baseline justify-between gap-3 mb-1">
                         <h3 className="font-display text-base font-bold text-white leading-tight">{tpl.name}</h3>
-                        <span className="text-[10px] uppercase tracking-[0.2em] text-white/30 shrink-0 font-mono">{tpl.slug}</span>
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-white/55 shrink-0 font-mono">{tpl.slug}</span>
                       </div>
-                      <p className="text-[13px] text-white/50 leading-relaxed line-clamp-2">{tpl.description}</p>
+                      <p className="text-[13px] text-white/65 leading-relaxed line-clamp-2">{tpl.description}</p>
                       <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
                         <span className="text-xs font-semibold text-white">Ver ao vivo →</span>
                         <span className="text-white/20" aria-hidden>·</span>

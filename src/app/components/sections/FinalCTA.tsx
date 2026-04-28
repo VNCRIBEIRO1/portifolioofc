@@ -12,7 +12,7 @@ export function FinalCTA() {
       </div>
       <div className="max-w-[1500px] mx-auto text-center relative z-10">
         <Reveal>
-          <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3">
             <span className="w-8 h-[1px] bg-white/20" />
             /vamos conversar
             <span className="w-8 h-[1px] bg-white/20" />
@@ -51,7 +51,7 @@ export function FinalCTA() {
             </MagneticCard>
           </div>
 
-          <div className="text-sm text-white/40 mt-10 font-mono">
+          <div className="text-sm text-white/55 mt-10 font-mono">
             Ou ligue: <a className="text-white font-semibold" href="tel:+5518996311933">{PHONE_PRETTY}</a>
           </div>
         </Reveal>
