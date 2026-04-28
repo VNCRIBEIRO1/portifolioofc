@@ -1,99 +1,118 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
 import { WA_LINK } from "../../lib/constants";
-import { MagneticButton, SplitText, WhatsAppIcon } from "../primitives";
+import { ScrambleText, SaoPauloClock, MagneticCard } from "../interactive";
+import { MagneticButton, WhatsAppIcon } from "../primitives";
 
 export function Hero({ loading }: { loading: boolean }) {
   const { scrollYProgress } = useScroll();
-  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -150]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -120]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-6 pt-24 sm:pt-28 pb-16 overflow-hidden relative">
-      <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
-        <Image src="/images/hero-abstract.png" alt="" fill className="object-cover" priority />
+    <section className="min-h-screen flex items-center px-6 pt-32 pb-20 overflow-hidden relative">
+      <div className="aurora" aria-hidden="true">
+        <span /><span /><span />
       </div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.05),transparent_60%)] pointer-events-none" />
 
-      {/* Soft accent blobs */}
-      <div aria-hidden="true" className="absolute -top-20 -left-20 w-[480px] h-[480px] rounded-full bg-rose-200/40 blur-[120px] pointer-events-none" />
-      <div aria-hidden="true" className="absolute -bottom-32 -right-20 w-[520px] h-[520px] rounded-full bg-amber-200/40 blur-[140px] pointer-events-none" />
-
-      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="text-center max-w-5xl relative z-10">
+      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-[1500px] mx-auto w-full relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={!loading ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 2.4 }}
+          className="flex items-center justify-between mb-12 text-xs uppercase tracking-[0.3em] text-white/40 font-mono"
         >
-          <span className="text-sm uppercase tracking-[0.3em] text-[var(--muted)] font-medium inline-flex items-center gap-3">
-            <span className="w-8 h-[1px] bg-[var(--border-strong)]" />
-            PixelCode Studio
-            <span className="w-8 h-[1px] bg-[var(--border-strong)]" />
+          <span className="inline-flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Disponível · 2026
+          </span>
+          <span className="hidden md:inline-flex items-center gap-2">
+            São Paulo · <SaoPauloClock />
           </span>
         </motion.div>
 
-        <h1 className="font-display text-5xl sm:text-7xl lg:text-[7.5rem] font-bold leading-[0.95] tracking-tight mt-6 mb-6">
+        <h1 className="font-display font-bold leading-[0.88] tracking-[-0.04em] text-[clamp(3rem,12vw,11rem)]">
           {!loading && (
             <>
-              <SplitText text="Sites que" delay={2.5} />
-              <br />
-              <SplitText text="vendem." className="gradient-text" delay={2.7} />
+              <motion.span
+                initial={{ opacity: 0, y: 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 2.5, ease: [0.25, 1, 0.5, 1] }}
+                className="block"
+              >
+                <ScrambleText text="Sites que" trigger="mount" delay={2700} />
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 2.7, ease: [0.25, 1, 0.5, 1] }}
+                className="block gradient-text italic"
+              >
+                <ScrambleText text="vendem." trigger="mount" delay={2900} />
+              </motion.span>
             </>
           )}
         </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 40 }}
-          animate={!loading ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 3.1 }}
-          className="text-lg sm:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 font-light leading-relaxed"
-        >
-          Sites, landing pages, automações e CRMs sob medida — focados em
-          conversão real, não em métrica de vaidade. Estética impecável, código
-          performático, SEO técnico de verdade.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={!loading ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 3.3 }}
-          className="flex flex-col sm:flex-row justify-center gap-3"
-        >
-          <MagneticButton
-            href={WA_LINK("Olá Vinícius! Quero conversar sobre meu projeto.")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-4 rounded-full bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors inline-flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+        <div className="grid lg:grid-cols-12 gap-10 mt-14 items-end">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={!loading ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 3.2 }}
+            className="lg:col-span-6 lg:col-start-1"
           >
-            <WhatsAppIcon className="w-4 h-4" />
-            Quero meu site
-          </MagneticButton>
-          <MagneticButton
-            href="#trabalhos"
-            className="px-8 py-4 rounded-full border border-[var(--ink)] text-[var(--ink)] font-medium hover:bg-[var(--ink)] hover:text-white transition-all"
-          >
-            Ver trabalhos →
-          </MagneticButton>
-        </motion.div>
+            <p className="text-white/60 text-lg sm:text-xl leading-relaxed font-light max-w-xl">
+              Studio independente de Vinícius Ribeiro. Construo sites, landings, automações e CRMs sob medida — focados em conversão real, com estética cinematográfica e código performático.
+            </p>
+          </motion.div>
 
-        {/* Trust strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={!loading ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 3.4 }}
+            className="lg:col-span-5 lg:col-start-8 flex flex-col sm:flex-row gap-3"
+          >
+            <MagneticCard className="flex-1">
+              <MagneticButton
+                href={WA_LINK("Olá Vinícius! Quero conversar sobre meu projeto.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="cta"
+                data-cursor-label="WhatsApp"
+                className="w-full px-7 py-5 rounded-full bg-rose-500 text-white font-semibold hover:bg-rose-400 transition-colors inline-flex items-center justify-center gap-2 shadow-[0_20px_60px_-15px_rgba(244,63,94,0.5)]"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                Iniciar projeto
+              </MagneticButton>
+            </MagneticCard>
+            <MagneticCard className="flex-1">
+              <MagneticButton
+                href="#trabalhos"
+                data-cursor="cta"
+                data-cursor-label="Ver"
+                className="w-full px-7 py-5 rounded-full border border-white/20 text-white font-medium hover:border-white hover:bg-white hover:text-black transition-all inline-flex items-center justify-center"
+              >
+                Ver trabalhos →
+              </MagneticButton>
+            </MagneticCard>
+          </motion.div>
+        </div>
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={!loading ? { opacity: 1 } : {}}
           transition={{ delay: 3.6 }}
-          className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--muted)]"
+          className="mt-20 pt-8 border-t border-white/10 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.25em] text-white/40 font-mono"
         >
-          <span className="inline-flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            Atendimento via WhatsApp
-          </span>
-          <span className="hidden sm:inline opacity-30">·</span>
+          <span>Figma · Webflow · Next.js</span>
+          <span className="opacity-30">/</span>
+          <span>GSAP · Lottie · Lenis</span>
+          <span className="opacity-30">/</span>
           <span>SEO Google + Maps</span>
-          <span className="hidden sm:inline opacity-30">·</span>
-          <span>LGPD & OAB 205/2021</span>
-          <span className="hidden sm:inline opacity-30">·</span>
-          <span>Hospedagem inclusa</span>
+          <span className="opacity-30">/</span>
+          <span>LGPD · OAB 205/2021</span>
         </motion.div>
       </motion.div>
     </section>

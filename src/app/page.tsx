@@ -2,6 +2,8 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { ReactLenis } from "@studio-freight/react-lenis";
+import { CustomCursor } from "./components/interactive";
 import { FloatingWhatsApp, LoadingScreen, PromoPopup, PromoTopBar } from "./components/overlays";
 import { ScrollProgress } from "./components/primitives";
 import { About } from "./components/sections/About";
@@ -25,7 +27,9 @@ export default function Home() {
   }, [loading]);
 
   return (
+    <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
     <div className="min-h-screen bg-[var(--bg)] grain">
+      <CustomCursor />
       <AnimatePresence>
         {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       </AnimatePresence>
@@ -49,5 +53,6 @@ export default function Home() {
 
       <Footer />
     </div>
+    </ReactLenis>
   );
 }

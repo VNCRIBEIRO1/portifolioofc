@@ -1,51 +1,58 @@
 "use client";
 
-import Image from "next/image";
 import { EMAIL, PHONE_PRETTY, WA_LINK } from "../../lib/constants";
 import { MagneticButton, Reveal, WhatsAppIcon } from "../primitives";
+import { MagneticCard } from "../interactive";
 
 export function FinalCTA() {
   return (
-    <section id="contato" className="px-6 py-28 sm:py-32 relative overflow-hidden">
-      <div aria-hidden="true" className="absolute inset-0 opacity-[0.05] pointer-events-none">
-        <Image src="/images/pattern-contact.png" alt="" fill className="object-cover" />
+    <section id="contato" className="px-6 py-32 sm:py-40 relative overflow-hidden">
+      <div className="aurora" aria-hidden="true">
+        <span /><span /><span />
       </div>
-      <div className="max-w-5xl mx-auto text-center relative">
+      <div className="max-w-[1500px] mx-auto text-center relative z-10">
         <Reveal>
-          <span className="text-sm uppercase tracking-widest text-[var(--muted)] font-medium inline-flex items-center gap-3">
-            <span className="w-8 h-[1px] bg-[var(--border-strong)]" />
+          <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+            <span className="w-8 h-[1px] bg-white/20" />
             Vamos conversar
-            <span className="w-8 h-[1px] bg-[var(--border-strong)]" />
+            <span className="w-8 h-[1px] bg-white/20" />
           </span>
-          <h2 className="font-display text-5xl sm:text-7xl font-bold leading-[0.95] mt-6">
+          <h2 className="font-display text-[clamp(3rem,11vw,10rem)] font-bold leading-[0.9] mt-8 tracking-[-0.04em]">
             Bora começar <br />
-            <span className="gradient-text">o seu projeto?</span>
+            <span className="gradient-text italic">o seu projeto?</span>
           </h2>
-          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mt-6 font-light leading-relaxed">
-            Resposta em até 24h úteis. Orçamento gratuito e sem compromisso.
-            Quanto antes a gente conversa, antes você fica online.
+          <p className="text-white/50 text-lg max-w-xl mx-auto mt-8 font-light leading-relaxed">
+            Resposta em até 24h úteis. Orçamento gratuito e sem compromisso. Quanto antes a gente conversa, antes você fica online.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-10">
-            <MagneticButton
-              href={WA_LINK("Olá Vinícius! Quero começar meu projeto.")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors shadow-xl shadow-emerald-500/20"
-            >
-              <WhatsAppIcon className="w-4 h-4" />
-              Chamar no WhatsApp
-            </MagneticButton>
-            <MagneticButton
-              href={`mailto:${EMAIL}`}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-[var(--ink)] text-[var(--ink)] font-medium hover:bg-[var(--ink)] hover:text-white transition-all"
-            >
-              {EMAIL}
-            </MagneticButton>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-12">
+            <MagneticCard>
+              <MagneticButton
+                href={WA_LINK("Olá Vinícius! Quero começar meu projeto.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="cta"
+                data-cursor-label="WhatsApp"
+                className="inline-flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-rose-500 text-white font-semibold hover:bg-rose-400 transition-colors shadow-[0_20px_60px_-15px_rgba(244,63,94,0.5)]"
+              >
+                <WhatsAppIcon className="w-4 h-4" />
+                Chamar no WhatsApp
+              </MagneticButton>
+            </MagneticCard>
+            <MagneticCard>
+              <MagneticButton
+                href={`mailto:${EMAIL}`}
+                data-cursor="cta"
+                data-cursor-label="Email"
+                className="inline-flex items-center justify-center gap-2 px-8 py-5 rounded-full border border-white/20 text-white font-medium hover:border-white hover:bg-white hover:text-black transition-all"
+              >
+                {EMAIL}
+              </MagneticButton>
+            </MagneticCard>
           </div>
 
-          <div className="text-sm text-[var(--muted)] mt-8">
-            Ou ligue: <a className="text-[var(--ink)] font-semibold" href="tel:+5518996311933">{PHONE_PRETTY}</a>
+          <div className="text-sm text-white/40 mt-10 font-mono">
+            Ou ligue: <a className="text-white font-semibold" href="tel:+5518996311933">{PHONE_PRETTY}</a>
           </div>
         </Reveal>
       </div>
