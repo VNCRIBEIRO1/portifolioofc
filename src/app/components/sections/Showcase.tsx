@@ -22,17 +22,17 @@ export function Showcase() {
         <Reveal>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-20">
             <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+              <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3">
                 <span className="w-8 h-[1px] bg-white/20" />
-                Selected work · 2024–2026
+                /trabalhos selecionados · 2024–2026
               </span>
               <h2 className="font-display text-5xl sm:text-7xl lg:text-[8rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em]">
-                Studies in <br />
-                <span className="gradient-text italic">conversion.</span>
+                Casos reais.<br />
+                <span className="gradient-text italic">Resultados mensuráveis.</span>
               </h2>
             </div>
-            <p className="text-white/50 max-w-md text-base lg:text-right font-light leading-relaxed">
-              Sites institucionais, landings de campanha e plataformas — cada um desenhado pra um objetivo claro. Passe o cursor para visualizar.
+            <p className="text-white/65 max-w-md text-base lg:text-right font-light leading-relaxed">
+              Sites institucionais, landings de campanha e plataformas sob medida — cada projeto com um objetivo claro, entregue do briefing à métrica. Passe o cursor para visualizar a peça.
             </p>
           </div>
         </Reveal>
@@ -63,7 +63,7 @@ export function Showcase() {
                 </div>
                 <div className="p-6">
                   <h3 className="font-display text-xl font-bold leading-tight whitespace-pre-line">{p.title}</h3>
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/40 mt-2 font-mono">{p.subtitle}</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-white/55 mt-2 font-mono">{p.subtitle}</p>
                 </div>
               </div>
             </Reveal>

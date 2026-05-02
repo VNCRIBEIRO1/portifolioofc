@@ -38,16 +38,16 @@ export function TemplatesShowcase() {
         <Reveal>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16">
             <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+              <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3">
                 <span className="w-8 h-[1px] bg-white/20" />
-                Catálogo · 25 templates prontos
+                /catálogo · 25 templates prontos
               </span>
               <h2 className="font-display text-5xl sm:text-7xl lg:text-[8rem] font-bold mt-6 leading-[0.9] tracking-[-0.04em]">
-                Pick your <br />
-                <span className="gradient-text italic">starting point.</span>
+                Encontre seu <br />
+                <span className="gradient-text italic">ponto de partida.</span>
               </h2>
-              <p className="text-white/50 mt-6 max-w-2xl font-light leading-relaxed">
-                Designs profissionais para Advocacia, Saúde e Psicologia — todos personalizáveis com a sua marca, conteúdo e domínio.
+              <p className="text-white/65 mt-6 max-w-2xl font-light leading-relaxed">
+                Designs profissionais para Advocacia, Saúde e Psicologia — cada template personalizado com a sua marca, conteúdo e domínio. Entrega em 5 a 10 dias úteis.
               </p>
             </div>
             <a
@@ -117,9 +117,9 @@ export function TemplatesShowcase() {
                     <div className="p-5">
                       <div className="flex items-baseline justify-between gap-3 mb-1">
                         <h3 className="font-display text-base font-bold text-white leading-tight">{tpl.name}</h3>
-                        <span className="text-[10px] uppercase tracking-[0.2em] text-white/30 shrink-0 font-mono">{tpl.slug}</span>
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-white/55 shrink-0 font-mono">{tpl.slug}</span>
                       </div>
-                      <p className="text-[13px] text-white/50 leading-relaxed line-clamp-2">{tpl.description}</p>
+                      <p className="text-[13px] text-white/65 leading-relaxed line-clamp-2">{tpl.description}</p>
                       <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
                         <span className="text-xs font-semibold text-white">Ver ao vivo →</span>
                         <span className="text-white/20" aria-hidden>·</span>
@@ -157,8 +157,8 @@ export function TemplatesShowcase() {
           <h3 className="font-display text-3xl sm:text-5xl font-bold text-white tracking-tight">
             Não achou o que queria?
           </h3>
-          <p className="text-white/60 mt-4 max-w-xl mx-auto leading-relaxed">
-            Cada template é totalmente personalizável. Se preferir algo 100% sob medida, eu desenho do zero pra você.
+          <p className="text-white/65 mt-4 max-w-xl mx-auto leading-relaxed">
+            Cada template é totalmente personalizável. Se preferir algo 100% sob medida, eu desenho do zero — folha em branco, briefing seu.
           </p>
           <a
             href={WA_LINK("Olá Vinícius! Vi os templates e quero conversar sobre o meu site.")}

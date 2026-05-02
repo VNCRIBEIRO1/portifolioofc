@@ -12,17 +12,17 @@ export function FinalCTA() {
       </div>
       <div className="max-w-[1500px] mx-auto text-center relative z-10">
         <Reveal>
-          <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-mono inline-flex items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.3em] text-white/55 font-mono inline-flex items-center gap-3">
             <span className="w-8 h-[1px] bg-white/20" />
-            Vamos conversar
+            /vamos conversar
             <span className="w-8 h-[1px] bg-white/20" />
           </span>
           <h2 className="font-display text-[clamp(3rem,11vw,10rem)] font-bold leading-[0.9] mt-8 tracking-[-0.04em]">
-            Bora começar <br />
-            <span className="gradient-text italic">o seu projeto?</span>
+            Pronto para o<br />
+            <span className="gradient-text italic">próximo passo?</span>
           </h2>
-          <p className="text-white/50 text-lg max-w-xl mx-auto mt-8 font-light leading-relaxed">
-            Resposta em até 24h úteis. Orçamento gratuito e sem compromisso. Quanto antes a gente conversa, antes você fica online.
+          <p className="text-white/70 text-lg max-w-xl mx-auto mt-8 font-light leading-relaxed">
+            Resposta em até 24h úteis. Orçamento gratuito, sem compromisso e sem mensalidade escondida. Quanto antes a gente conversa, antes você fica online — e <span className="text-white">vendendo</span>.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-12">
@@ -51,7 +51,7 @@ export function FinalCTA() {
             </MagneticCard>
           </div>
 
-          <div className="text-sm text-white/40 mt-10 font-mono">
+          <div className="text-sm text-white/55 mt-10 font-mono">
             Ou ligue: <a className="text-white font-semibold" href="tel:+5518996311933">{PHONE_PRETTY}</a>
           </div>
         </Reveal>

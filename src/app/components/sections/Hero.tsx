@@ -22,11 +22,11 @@ export function Hero({ loading }: { loading: boolean }) {
           initial={{ opacity: 0, y: 20 }}
           animate={!loading ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 2.4 }}
-          className="flex items-center justify-between mb-12 text-xs uppercase tracking-[0.3em] text-white/40 font-mono"
+          className="flex items-center justify-between mb-12 text-xs uppercase tracking-[0.3em] text-white/55 font-mono"
         >
           <span className="inline-flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Disponível · 2026
+            Agenda aberta · Abril 2026
           </span>
           <span className="hidden md:inline-flex items-center gap-2">
             São Paulo · <SaoPauloClock />
@@ -50,7 +50,7 @@ export function Hero({ loading }: { loading: boolean }) {
                 transition={{ duration: 1, delay: 2.7, ease: [0.25, 1, 0.5, 1] }}
                 className="block gradient-text italic"
               >
-                <ScrambleText text="vendem." trigger="mount" delay={2900} />
+                <ScrambleText text="convertem." trigger="mount" delay={2900} />
               </motion.span>
             </>
           )}
@@ -63,8 +63,8 @@ export function Hero({ loading }: { loading: boolean }) {
             transition={{ duration: 0.8, delay: 3.2 }}
             className="lg:col-span-6 lg:col-start-1"
           >
-            <p className="text-white/60 text-lg sm:text-xl leading-relaxed font-light max-w-xl">
-              Studio independente de Vinícius Ribeiro. Construo sites, landings, automações e CRMs sob medida — focados em conversão real, com estética cinematográfica e código performático.
+            <p className="text-white/75 text-lg sm:text-xl leading-relaxed font-light max-w-xl">
+              Estúdio independente de <span className="text-white font-medium">Vinícius Ribeiro</span>. Sites institucionais, landing pages, automações e CRMs sob medida — design premiado, código performático e um único objetivo: <span className="text-white font-medium">transformar visitas em clientes</span>.
             </p>
           </motion.div>
 
@@ -104,7 +104,7 @@ export function Hero({ loading }: { loading: boolean }) {
           initial={{ opacity: 0 }}
           animate={!loading ? { opacity: 1 } : {}}
           transition={{ delay: 3.6 }}
-          className="mt-20 pt-8 border-t border-white/10 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.25em] text-white/40 font-mono"
+          className="mt-20 pt-8 border-t border-white/10 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] uppercase tracking-[0.25em] text-white/55 font-mono"
         >
           <span>Figma · Webflow · Next.js</span>
           <span className="opacity-30">/</span>
