@@ -23,9 +23,16 @@ import * as THREE from "three";
 import { glitchClock } from "./glitch";
 import { useImmersive } from "./store";
 
-// Pre-carrega 11 GLBs procedurais unicos (gerados por scripts/generate-crystals.mjs)
+// GLBs procedurais (gerados por scripts/generate-crystals.mjs) +
+// GLBs fotorrealistas (Hunyuan3D-2) em public/models/crystals-real/<slug>.glb
 const CRYSTAL_SLUGS = ["cerbelera","andresa","apex","lumen","onda","pulse","atelier","forge","northwind","kira","scholae"];
-CRYSTAL_SLUGS.forEach(s => useGLTF.preload(`/models/crystals/${s}.glb`));
+const REAL_MODEL_SLUGS = new Set(["cerbelera"]);
+CRYSTAL_SLUGS.forEach(s => {
+  const path = REAL_MODEL_SLUGS.has(s)
+    ? `/models/crystals-real/${s}.glb`
+    : `/models/crystals/${s}.glb`;
+  useGLTF.preload(path);
+});
 
 export type GemKind = "icosa" | "octa" | "dodeca" | "bipyramid";
 
@@ -47,14 +54,22 @@ export type CrystalCase = {
   z: number;
   offset: [number, number];
   rotY: number;
+  /**
+   * Quando true, carrega GLB fotorrealista de
+   * `/models/crystals-real/<slug>.glb` (Hunyuan3D-2 com texturas PBR)
+   * em vez do GLB procedural — renderiza a scene direta com
+   * envMapIntensity boost p/ visual de studio product photography.
+   */
+  realModel?: boolean;
 };
 
 export const CRYSTALS: CrystalCase[] = [
-  // 1. Cerbelera — JURIDICO :: Obsidiana com fogo dourado interno
+  // 1. Cerbelera — JURIDICO :: Obsidiana fotorrealista (Hunyuan3D-2)
   { slug: "cerbelera", title: "Cerbelera & Oliveira", nicho: "Juridico",
     mockup: "/images/projects/cerbelera-desktop.png",
     gemColor: "#1a1320", glowColor: "#ffb74a", accent: "#ffc674",
-    kind: "octa", size: 2.6, z: -90, offset: [-3.5, 0.8], rotY: 0.3 },
+    kind: "octa", size: 2.6, z: -90, offset: [-3.5, 0.8], rotY: 0.3,
+    realModel: true },
 
   // 2. Andresa — SAUDE :: Quartzo rosa luminoso
   { slug: "andresa", title: "Dra. Andresa Martin", nicho: "Saude",
@@ -236,15 +251,54 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
   const texture = useMockupTexture(info);
 
   // Geometria UNICA gerada por scripts/generate-crystals.mjs (procedural com noise)
-  const gltf = useGLTF(`/models/crystals/${info.slug}.glb`) as any;
+  // OU GLB fotorrealista Hunyuan3D-2 quando info.realModel === true.
+  const realModel = info.realModel === true;
+  const glbPath = realModel
+    ? `/models/crystals-real/${info.slug}.glb`
+    : `/models/crystals/${info.slug}.glb`;
+  const gltf = useGLTF(glbPath) as any;
+
+  // -- Procedural path: extrai outer_/inner_ nodes do GLB procedural
   const outerGeo = useMemo<THREE.BufferGeometry | null>(() => {
+    if (realModel) return null;
     const node = gltf?.nodes?.[`outer_${info.slug}`];
     return node?.geometry ?? null;
-  }, [gltf, info.slug]);
+  }, [gltf, info.slug, realModel]);
   const innerGeo = useMemo<THREE.BufferGeometry | null>(() => {
+    if (realModel) return null;
     const node = gltf?.nodes?.[`inner_${info.slug}`];
     return node?.geometry ?? null;
-  }, [gltf, info.slug]);
+  }, [gltf, info.slug, realModel]);
+
+  // -- Real model path: clona scene, computa scale p/ normalizar bbox
+  // ao info.size, e aplica envMapIntensity boost em todos os MeshStandardMaterials.
+  const realScene = useMemo(() => {
+    if (!realModel || !gltf?.scene) return null;
+    const cloned = gltf.scene.clone(true) as THREE.Group;
+    cloned.traverse((obj: THREE.Object3D) => {
+      const m = (obj as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+      const apply = (mat: THREE.Material) => {
+        const std = mat as THREE.MeshStandardMaterial;
+        if ((std as any).isMeshStandardMaterial || (std as any).isMeshPhysicalMaterial) {
+          std.envMapIntensity = 2.4;
+          std.roughness = Math.max(0.1, Math.min(0.55, std.roughness ?? 0.5));
+          std.metalness = Math.max(std.metalness ?? 0, 0.15);
+          std.needsUpdate = true;
+        }
+      };
+      if (Array.isArray(m)) m.forEach(apply); else if (m) apply(m);
+    });
+    return cloned;
+  }, [realModel, gltf]);
+  const realScale = useMemo(() => {
+    if (!realScene) return 1;
+    const box = new THREE.Box3().setFromObject(realScene);
+    const sz = new THREE.Vector3();
+    box.getSize(sz);
+    const maxDim = Math.max(sz.x, sz.y, sz.z) || 1;
+    // Normaliza p/ ~2*info.size de extensao maxima (cristal preenche ~size)
+    return (info.size * 2) / maxDim;
+  }, [realScene, info.size]);
 
   // Fallback: caso GLB falhe carregar, usa primitiva basica
   const shellGeoEl = useMemo(() => {
@@ -415,79 +469,89 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      {/* 1. Faceted shell — vidro fisico facetado VIVIDO */}
-      <mesh ref={shellRef}>
-        {shellGeoEl}
-        <meshPhysicalMaterial
-          ref={shellMatRef}
-          color={gemColor}
-          emissive={gemColor}
-          emissiveIntensity={0.35}
-          roughness={0.06}
-          metalness={0.15}
-          transmission={0.7}
-          thickness={1.6}
-          ior={1.85}
-          clearcoat={1}
-          clearcoatRoughness={0.04}
-          attenuationColor={glowColor}
-          attenuationDistance={1.6}
-          iridescence={0.6}
-          iridescenceIOR={1.6}
-          iridescenceThicknessRange={[100, 600]}
-          sheen={0.5}
-          sheenColor={accentColor}
-          sheenRoughness={0.4}
-          flatShading
-          transparent
-          opacity={0.92}
-          side={THREE.DoubleSide}
-          envMapIntensity={2.2}
+      {/* 1. Faceted shell — vidro fisico facetado VIVIDO (procedural)
+           OU scene fotorrealista Hunyuan3D-2 quando info.realModel */}
+      {realModel && realScene ? (
+        <primitive
+          object={realScene}
+          scale={realScale}
         />
-      </mesh>
+      ) : (
+        <>
+          <mesh ref={shellRef}>
+            {shellGeoEl}
+            <meshPhysicalMaterial
+              ref={shellMatRef}
+              color={gemColor}
+              emissive={gemColor}
+              emissiveIntensity={0.35}
+              roughness={0.06}
+              metalness={0.15}
+              transmission={0.7}
+              thickness={1.6}
+              ior={1.85}
+              clearcoat={1}
+              clearcoatRoughness={0.04}
+              attenuationColor={glowColor}
+              attenuationDistance={1.6}
+              iridescence={0.6}
+              iridescenceIOR={1.6}
+              iridescenceThicknessRange={[100, 600]}
+              sheen={0.5}
+              sheenColor={accentColor}
+              sheenRoughness={0.4}
+              flatShading
+              transparent
+              opacity={0.92}
+              side={THREE.DoubleSide}
+              envMapIntensity={2.2}
+            />
+          </mesh>
 
-      {/* 1c. Camada interna de facetas — geometria UNICA nested do GLB para profundidade real */}
-      <mesh scale={0.62} rotation={[0.6, 0.4, 0.2]}>
-        {innerGeo ? (
-          <primitive object={innerGeo} attach="geometry" />
-        ) : info.kind === "octa" ? (
-          <octahedronGeometry args={[info.size, 0]} />
-        ) : info.kind === "dodeca" ? (
-          <icosahedronGeometry args={[info.size * 0.95, 0]} />
-        ) : (
-          <octahedronGeometry args={[info.size * 0.9, 0]} />
-        )}
-        <meshPhysicalMaterial
-          color={glowColor}
-          emissive={glowColor}
-          emissiveIntensity={0.6}
-          roughness={0.1}
-          metalness={0.3}
-          transmission={0.4}
-          thickness={0.8}
-          ior={1.9}
-          flatShading
-          transparent
-          opacity={0.55}
-          side={THREE.DoubleSide}
-          envMapIntensity={1.5}
-        />
-      </mesh>
+          {/* 1c. Camada interna de facetas — geometria UNICA nested do GLB para profundidade real */}
+          <mesh scale={0.62} rotation={[0.6, 0.4, 0.2]}>
+            {innerGeo ? (
+              <primitive object={innerGeo} attach="geometry" />
+            ) : info.kind === "octa" ? (
+              <octahedronGeometry args={[info.size, 0]} />
+            ) : info.kind === "dodeca" ? (
+              <icosahedronGeometry args={[info.size * 0.95, 0]} />
+            ) : (
+              <octahedronGeometry args={[info.size * 0.9, 0]} />
+            )}
+            <meshPhysicalMaterial
+              color={glowColor}
+              emissive={glowColor}
+              emissiveIntensity={0.6}
+              roughness={0.1}
+              metalness={0.3}
+              transmission={0.4}
+              thickness={0.8}
+              ior={1.9}
+              flatShading
+              transparent
+              opacity={0.55}
+              side={THREE.DoubleSide}
+              envMapIntensity={1.5}
+            />
+          </mesh>
 
-      {/* 1b. Glow halo — esfera maior aditiva ao redor */}
-      <mesh scale={1.18}>
-        {shellGeoEl}
-        <meshBasicMaterial
-          ref={glowMatRef}
-          color={gemColor}
-          transparent
-          opacity={0.5}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          side={THREE.BackSide}
-          toneMapped={false}
-        />
-      </mesh>
+          {/* 1b. Glow halo — esfera maior aditiva ao redor */}
+          <mesh scale={1.18}>
+            {shellGeoEl}
+            <meshBasicMaterial
+              ref={glowMatRef}
+              color={gemColor}
+              transparent
+              opacity={0.5}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+              side={THREE.BackSide}
+              toneMapped={false}
+            />
+          </mesh>
+        </>
+      )}
 
       {/* 2. Inner core — pequena gem brilhante interna */}
       <mesh>

@@ -351,11 +351,16 @@ async function writeGLB(spec, outPath) {
 // ============================================================
 // MAIN
 // ============================================================
+// Slugs com GLB fotorrealista (Hunyuan3D-2) em public/models/crystals-real/{slug}.glb
+// — NAO sobrescrevemos o procedural; o componente carrega o real diretamente.
+const REAL_SLUGS = new Set(["cerbelera"]);
+
 (async () => {
   await fs.mkdir(OUT_DIR, { recursive: true });
-  console.log(`[crystals] generating ${CRYSTALS.length} GLBs to ${OUT_DIR}\n`);
+  const todo = CRYSTALS.filter(c => !REAL_SLUGS.has(c.slug));
+  console.log(`[crystals] generating ${todo.length} GLBs to ${OUT_DIR} (skip real: ${[...REAL_SLUGS].join(",") || "-"})\n`);
   const results = [];
-  for (const c of CRYSTALS) {
+  for (const c of todo) {
     const out = path.join(OUT_DIR, `${c.slug}.glb`);
     const r = await writeGLB(c, out);
     results.push({ slug: c.slug, ...r });
