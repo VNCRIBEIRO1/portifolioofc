@@ -28,12 +28,12 @@ const OUT_DIR = path.join(ROOT, "public", "models", "crystals");
 const CRYSTALS = [
   { slug: "cerbelera", kind: "octa",      size: 2.6, gem: "#1a1320", glow: "#ffb74a", noise: 0.12, freq: 1.6, sub: 2 },
   { slug: "andresa",   kind: "dodeca",    size: 2.5, gem: "#f8c5d4", glow: "#ff7aa8", noise: 0.10, freq: 1.4, sub: 2 },
-  { slug: "apex",      kind: "bipyramid", size: 2.7, gem: "#3da8ff", glow: "#00e5ff", noise: 0.08, freq: 2.0, sub: 1 },
-  { slug: "lumen",     kind: "bipyramid", size: 2.8, gem: "#2dd47a", glow: "#ffd54a", noise: 0.09, freq: 1.8, sub: 1 },
+  { slug: "apex",      kind: "bipyramid", size: 2.7, gem: "#3da8ff", glow: "#00e5ff", noise: 0.18, freq: 2.4, sub: 2 },
+  { slug: "lumen",     kind: "bipyramid", size: 2.8, gem: "#2dd47a", glow: "#ffd54a", noise: 0.20, freq: 2.2, sub: 2 },
   { slug: "onda",      kind: "icosa",     size: 2.5, gem: "#5cc8ff", glow: "#a8f0ff", noise: 0.14, freq: 1.2, sub: 2 },
   { slug: "pulse",     kind: "octa",      size: 2.6, gem: "#e63946", glow: "#ff8f6b", noise: 0.13, freq: 1.5, sub: 2 },
   { slug: "atelier",   kind: "dodeca",    size: 2.6, gem: "#9d4edd", glow: "#e0aaff", noise: 0.11, freq: 1.7, sub: 2 },
-  { slug: "forge",     kind: "bipyramid", size: 2.7, gem: "#ff9c1a", glow: "#ffe066", noise: 0.10, freq: 1.9, sub: 1 },
+  { slug: "forge",     kind: "bipyramid", size: 2.7, gem: "#ff9c1a", glow: "#ffe066", noise: 0.19, freq: 2.3, sub: 2 },
   { slug: "northwind", kind: "octa",      size: 2.7, gem: "#1e40af", glow: "#60a5fa", noise: 0.09, freq: 1.4, sub: 2 },
   { slug: "kira",      kind: "icosa",     size: 2.5, gem: "#f0aaff", glow: "#80ffea", noise: 0.15, freq: 1.3, sub: 2 },
   { slug: "scholae",   kind: "dodeca",    size: 2.6, gem: "#06d6a0", glow: "#118ab2", noise: 0.12, freq: 1.6, sub: 2 },
@@ -139,17 +139,36 @@ function dodecahedron(radius) {
   // Para simplicidade, usamos icosaedro com escala. Visualmente fica facetado pos-noise.
   return icosahedron(radius);
 }
-function bipyramid(radius, segments = 6) {
+function bipyramid(radius, segments = 8) {
   const h = radius * 1.7;
-  const verts = [[0, h, 0], [0, -h, 0]];
+  // Apex superior alongado e apex inferior menor (cristais naturais sao assim)
+  const verts = [[0, h, 0], [0, -h * 0.85, 0]];
+  // Anel central + anel intermediario para mais densidade
   for (let i = 0; i < segments; i++) {
     const a = (i / segments) * Math.PI * 2;
-    verts.push([Math.cos(a) * radius * 0.7, 0, Math.sin(a) * radius * 0.7]);
+    verts.push([Math.cos(a) * radius * 0.75, radius * 0.15, Math.sin(a) * radius * 0.75]);
+  }
+  for (let i = 0; i < segments; i++) {
+    const a = (i / segments + 0.5 / segments) * Math.PI * 2;
+    verts.push([Math.cos(a) * radius * 0.65, -radius * 0.15, Math.sin(a) * radius * 0.65]);
   }
   const idx = [];
+  // Top fan -> anel superior
   for (let i = 0; i < segments; i++) {
     const a = 2 + i, b = 2 + ((i + 1) % segments);
-    idx.push(0, a, b, 1, b, a);
+    idx.push(0, a, b);
+  }
+  // Conexao anel superior <-> anel inferior (cintura)
+  for (let i = 0; i < segments; i++) {
+    const a = 2 + i, b = 2 + ((i + 1) % segments);
+    const c = 2 + segments + i;
+    const d = 2 + segments + ((i + 1) % segments);
+    idx.push(a, c, b, b, c, d);
+  }
+  // Bottom fan
+  for (let i = 0; i < segments; i++) {
+    const c = 2 + segments + i, d = 2 + segments + ((i + 1) % segments);
+    idx.push(1, d, c);
   }
   return { verts, idx };
 }
