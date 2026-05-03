@@ -7,137 +7,186 @@ import { CRYSTALS } from "./CrystalShowcase";
 import { useImmersive } from "./store";
 
 /**
- * ScrollCamera — Zoom seguidor que serpenteia pelos cristais.
+ * ScrollCamera — Câmera Showcase: visita cada cristal um por um,
+ * sempre olhando DIRETAMENTE para o cristal atual, seguindo o mesmo padrão
+ * em todos. Holograma fica entre câmera e cristal (Billboard).
  *
- * - 0..0.10  hero approach (passa pelo gap PixelCode/Studio)
- * - 0.10..0.22 manifesto
- * - 0.22..0.88 vault — CatmullRomCurve3 com waypoints contornando cada cristal
- *               (X oposto ao offset), criando "S" entre eles.
- * - 0.88..1.0  CTA / abismo
+ * Acts:
+ *  - 0..0.10  hero approach (passa pelo gap PixelCode/Studio)
+ *  - 0.10..0.22 manifesto (curva suave para o vault)
+ *  - 0.22..0.88 vault — POSE-BASED: cada cristal ocupa um slot de progress;
+ *               câmera interpola entre pose_i e pose_{i+1} olhando ao cristal.
+ *  - 0.88..1.0  CTA / abismo
  *
- * Dolly: setDollyTarget(i) → camera para FRENTE do cristal (+8z, FOV 24).
- *  Hold 2.5s. Se openedCrystal == dolly, dolly fica travado (nao retorna).
+ * Pose por cristal:
+ *   - position = (c.offset.x * 0.55, c.offset.y * 0.35 + 0.6, c.z + DIST)
+ *   - lookAt   = (c.offset.x,        c.offset.y,              c.z)
+ *
+ * Dolly (click): aproxima câmera mais perto do cristal/holograma com FOV reduzido,
+ * de forma suave (cubic ease) e SUSTENTA enquanto openedCrystal == dolly.
  */
+
+const POSE_DISTANCE = 11; // distância base do cristal durante scroll
+const DOLLY_DISTANCE = 6.2; // distância no dolly (mockup ~80% viewport)
+const FOV_BASE = 55;
+const FOV_DOLLY = 32;
+
+type Pose = {
+  pos: THREE.Vector3;
+  look: THREE.Vector3;
+};
+
 export function ScrollCamera() {
   const { camera } = useThree();
-  const target = useRef(new THREE.Vector3(0, 0, 20));
-  const lookAt = useRef(new THREE.Vector3(0, 0, 0));
-  const fovTarget = useRef(55);
-  const dollyState = useRef<{ id: number; t: number } | null>(null);
-  const lookOverride = useRef(new THREE.Vector3());
-  const lookActive = useRef(false);
 
-  // Curva pelo vault — contorna cada cristal pelo X OPOSTO ao seu offset,
-  // criando movimento serpentino S entre eles.
-  const vaultCurve = useMemo(() => {
-    const points: THREE.Vector3[] = [];
-    points.push(new THREE.Vector3(0, 0, -75)); // entrada
-    CRYSTALS.forEach((c) => {
-      // Approach: passa pelo lado oposto antes de chegar no cristal
-      const approachX = -c.offset[0] * 0.55;
-      const approachY = -c.offset[1] * 0.4;
-      points.push(new THREE.Vector3(approachX, approachY, c.z + 6));
-      // Pass-by: ligeiramente atras do cristal, ainda com X oposto
-      points.push(new THREE.Vector3(-c.offset[0] * 0.2, -c.offset[1] * 0.2, c.z - 1));
-    });
-    points.push(new THREE.Vector3(0, 0, -245)); // saida
-    return new THREE.CatmullRomCurve3(points, false, "catmullrom", 0.5);
+  const poses = useMemo<Pose[]>(() => {
+    return CRYSTALS.map((c) => ({
+      pos: new THREE.Vector3(c.offset[0] * 0.55, c.offset[1] * 0.35 + 0.6, c.z + POSE_DISTANCE),
+      look: new THREE.Vector3(c.offset[0], c.offset[1], c.z),
+    }));
   }, []);
+
+  const entryPose = useMemo<Pose>(() => ({
+    pos: new THREE.Vector3(0, 0, -75),
+    look: new THREE.Vector3(0, 0, -85),
+  }), []);
+  const exitPose = useMemo<Pose>(() => ({
+    pos: new THREE.Vector3(0, 0, -245),
+    look: new THREE.Vector3(0, 0, -255),
+  }), []);
+
+  const targetPos = useRef(new THREE.Vector3(0, 0, 20));
+  const targetLook = useRef(new THREE.Vector3(0, 0, 0));
+  const fovTarget = useRef(FOV_BASE);
+
+  // Suaviza o dolly state — guarda inicio para ease cubico
+  const dollyState = useRef<{ id: number; t: number } | null>(null);
 
   useEffect(() => {
     if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = 55;
+      camera.fov = FOV_BASE;
       camera.near = 0.1;
       camera.far = 600;
       camera.updateProjectionMatrix();
     }
   }, [camera]);
 
+  /** Interpola pose entre A e B com alpha [0..1] (smoothstep). */
+  const blendPose = (out: { pos: THREE.Vector3; look: THREE.Vector3 }, A: Pose, B: Pose, alpha: number) => {
+    const a = THREE.MathUtils.smoothstep(alpha, 0, 1);
+    out.pos.lerpVectors(A.pos, B.pos, a);
+    out.look.lerpVectors(A.look, B.look, a);
+  };
+
+  const tmp = useMemo(() => ({ pos: new THREE.Vector3(), look: new THREE.Vector3() }), []);
+
   useFrame((_, delta) => {
     const p = useImmersive.getState().progress;
     const dolly = useImmersive.getState().dollyTarget;
     const opened = useImmersive.getState().openedCrystal;
 
-    const pos = new THREE.Vector3(0, 0, 20);
-    let lookY = 0;
-    let fovBase = 55;
+    let basePos: THREE.Vector3;
+    let baseLook: THREE.Vector3;
+    let fovBase = FOV_BASE;
 
     if (p < 0.10) {
+      // Hero approach — câmera entra do +z em direção ao manifesto
       const t = p / 0.10;
-      pos.set(0, 0, THREE.MathUtils.lerp(20, -2, t));
-      lookY = Math.sin((t - 0.5) * Math.PI) * 0.9;
-      fovBase = 55 + Math.sin(t * Math.PI) * 7;
+      tmp.pos.set(0, 0, THREE.MathUtils.lerp(20, -2, t));
+      tmp.look.set(0, Math.sin((t - 0.5) * Math.PI) * 0.9, -10);
+      basePos = tmp.pos.clone();
+      baseLook = tmp.look.clone();
+      fovBase = FOV_BASE + Math.sin(t * Math.PI) * 7;
     } else if (p < 0.22) {
+      // Manifesto → entrada do vault
       const t = (p - 0.10) / 0.12;
-      pos.set(
+      tmp.pos.set(
         Math.sin(t * Math.PI) * 0.6,
         Math.cos(t * Math.PI) * 0.4,
         THREE.MathUtils.lerp(-2, -75, t)
       );
+      tmp.look.set(0, 0, THREE.MathUtils.lerp(-12, -85, t));
+      basePos = tmp.pos.clone();
+      baseLook = tmp.look.clone();
     } else if (p < 0.88) {
-      const t = (p - 0.22) / 0.66;
-      const cv = vaultCurve.getPoint(t);
-      pos.copy(cv);
+      // VAULT — interpola entre poses dos cristais
+      const vt = (p - 0.22) / 0.66; // 0..1 ao longo do vault
+      const N = poses.length;
+      // Float index — começa no entry, passa pelas N poses, vai pro exit
+      const totalSegments = N + 1; // entry→pose0, pose0→pose1, ..., poseN-1→exit
+      const f = vt * totalSegments;
+      const segIdx = Math.floor(f);
+      const segT = f - segIdx;
+
+      const A: Pose = segIdx === 0 ? entryPose : poses[Math.min(segIdx - 1, N - 1)];
+      const B: Pose = segIdx >= N ? exitPose : poses[Math.min(segIdx, N - 1)];
+
+      // Hold: 35% do segmento permanece NA pose alvo (B), 65% transitando.
+      // Isso dá tempo do usuário absorver cada cristal antes do próximo.
+      let alpha: number;
+      if (segIdx === 0) {
+        // Primeiro segmento: entrada acelerada (sem hold)
+        alpha = segT;
+      } else if (segIdx >= N) {
+        // Saída
+        alpha = segT;
+      } else {
+        // Hold no início (no cristal A) então transita rapidamente
+        alpha = THREE.MathUtils.smoothstep(segT, 0.35, 1.0);
+      }
+      blendPose(tmp, A, B, alpha);
+      basePos = tmp.pos.clone();
+      baseLook = tmp.look.clone();
     } else {
+      // Saída
       const t = (p - 0.88) / 0.12;
-      pos.set(0, 0, THREE.MathUtils.lerp(-245, -285, t));
+      tmp.pos.set(0, 0, THREE.MathUtils.lerp(-245, -285, t));
+      tmp.look.set(0, 0, THREE.MathUtils.lerp(-255, -300, t));
+      basePos = tmp.pos.clone();
+      baseLook = tmp.look.clone();
     }
 
-    target.current.copy(pos);
-    fovTarget.current = fovBase;
-
-    // Olhar adiante na curva — camera olha para onde VAI
-    const lookAtScroll = new THREE.Vector3();
-    if (p >= 0.22 && p < 0.88) {
-      const t = (p - 0.22) / 0.66;
-      const tAhead = Math.min(0.999, t + 0.04);
-      lookAtScroll.copy(vaultCurve.getPoint(tAhead));
-    } else {
-      lookAtScroll.set(target.current.x * 0.5, target.current.y * 0.5 + lookY, target.current.z - 8);
-    }
-
-    // Dolly override
-    if (dolly >= 0) {
+    // Dolly override (click no cristal): zoom suave em direção ao cristal/holograma
+    if (dolly >= 0 && dolly < poses.length) {
       const c = CRYSTALS[dolly];
-      if (c) {
-        if (!dollyState.current || dollyState.current.id !== dolly) {
-          dollyState.current = { id: dolly, t: 0 };
-        }
-        dollyState.current.t += delta;
-        const dt = Math.min(dollyState.current.t / 1.0, 1);
-        const eased = 1 - Math.pow(1 - dt, 3);
-        target.current.set(
-          THREE.MathUtils.lerp(target.current.x, c.offset[0], eased),
-          THREE.MathUtils.lerp(target.current.y, c.offset[1], eased),
-          THREE.MathUtils.lerp(target.current.z, c.z + 8, eased)
-        );
-        fovTarget.current = THREE.MathUtils.lerp(55, 24, eased);
-        lookOverride.current.set(c.offset[0], c.offset[1], c.z);
-        lookActive.current = true;
+      if (!dollyState.current || dollyState.current.id !== dolly) {
+        dollyState.current = { id: dolly, t: 0 };
+      }
+      dollyState.current.t += delta;
+      const raw = Math.min(dollyState.current.t / 1.4, 1);
+      const eased = 1 - Math.pow(1 - raw, 3); // cubic out
 
-        // Se overlay aberto, MANTEM dolly travado (nao reseta automaticamente)
-        if (opened !== dolly && dollyState.current.t > 2.5) {
-          useImmersive.getState().setDollyTarget(-1);
-          dollyState.current = null;
-          lookActive.current = false;
-        }
+      const dollyPos = new THREE.Vector3(
+        c.offset[0] * 0.4,
+        c.offset[1] * 0.25 + 0.4,
+        c.z + DOLLY_DISTANCE
+      );
+      const dollyLook = new THREE.Vector3(c.offset[0], c.offset[1], c.z);
+
+      basePos.lerp(dollyPos, eased);
+      baseLook.lerp(dollyLook, eased);
+      fovBase = THREE.MathUtils.lerp(fovBase, FOV_DOLLY, eased);
+
+      // Auto-reset apenas se o overlay NÃO está aberto neste cristal
+      if (opened !== dolly && dollyState.current.t > 2.6) {
+        useImmersive.getState().setDollyTarget(-1);
+        dollyState.current = null;
       }
     } else {
       dollyState.current = null;
-      lookActive.current = false;
     }
 
-    camera.position.lerp(target.current, 0.10);
+    targetPos.current.copy(basePos);
+    targetLook.current.copy(baseLook);
+    fovTarget.current = fovBase;
 
-    if (lookActive.current) {
-      lookAt.current.lerp(lookOverride.current, 0.15);
-    } else {
-      lookAt.current.lerp(lookAtScroll, 0.10);
-    }
-    camera.lookAt(lookAt.current);
+    // Smooth lerp final
+    camera.position.lerp(targetPos.current, 0.12);
+    // LookAt suave — aplica matriz com vetor smoothado
+    camera.lookAt(targetLook.current);
 
     if (camera instanceof THREE.PerspectiveCamera) {
-      const next = THREE.MathUtils.lerp(camera.fov, fovTarget.current, 0.08);
+      const next = THREE.MathUtils.lerp(camera.fov, fovTarget.current, 0.10);
       if (Math.abs(next - camera.fov) > 0.05) {
         camera.fov = next;
         camera.updateProjectionMatrix();

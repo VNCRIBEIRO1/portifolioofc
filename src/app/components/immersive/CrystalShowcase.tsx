@@ -229,9 +229,6 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
   const hologramGeo = useMemo(() => new THREE.PlaneGeometry(4.2, 2.36, 32, 18), []);
   const screenGeo = useMemo(() => curvedScreenGeometry(4.6, 2.9, 7, 40), []);
 
-  // Lado de emersao: cristais com offset.x positivo emergem para a direita; negativo para esquerda
-  const hologramSide = useMemo(() => (info.offset[0] >= 0 ? 1 : -1), [info.offset]);
-
   const texture = useMockupTexture(info);
 
   // Geometria do shell — varia por kind
@@ -315,30 +312,36 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
       );
     }
 
-    // Holograma lateral: EMERGE no hover (focus) ou dolly
+    // Holograma frontal: posiciona-se entre o cristal e a câmera
+    // (vetor crystal→camera) e EMERGE no hover/dolly.
     if (hologramGroupRef.current) {
-      const targetX = (focused || dolly) ? hologramSide * 3.6 : hologramSide * 1.5;
-      const targetY = (focused || dolly) ? 0.4 : 0;
-      const targetZ = (focused || dolly) ? 1.8 : 0;
+      const camPos = state.camera.position;
+      const crystalWorldPos = groupRef.current.position;
+      // Vetor unitário do cristal para a câmera (em world space).
+      const dx = camPos.x - crystalWorldPos.x;
+      const dy = camPos.y - crystalWorldPos.y;
+      const dz = camPos.z - crystalWorldPos.z;
+      const len = Math.max(0.001, Math.sqrt(dx * dx + dy * dy + dz * dz));
+      const ux = dx / len, uy = dy / len, uz = dz / len;
+      // Distância do holograma em frente do cristal
+      const hologramDist = (focused || dolly) ? info.size + 2.4 : info.size + 1.0;
+      const targetX = ux * hologramDist;
+      const targetY = uy * hologramDist + 0.2;
+      const targetZ = uz * hologramDist;
       const targetScaleH = (focused || dolly) ? 1.0 : 0.001;
+
       hologramGroupRef.current.position.x = THREE.MathUtils.lerp(
-        hologramGroupRef.current.position.x, targetX, 0.12
+        hologramGroupRef.current.position.x, targetX, 0.14
       );
       hologramGroupRef.current.position.y = THREE.MathUtils.lerp(
-        hologramGroupRef.current.position.y, targetY, 0.12
+        hologramGroupRef.current.position.y, targetY, 0.14
       );
       hologramGroupRef.current.position.z = THREE.MathUtils.lerp(
-        hologramGroupRef.current.position.z, targetZ, 0.12
+        hologramGroupRef.current.position.z, targetZ, 0.14
       );
       const csH = hologramGroupRef.current.scale.x;
       const esH = THREE.MathUtils.lerp(csH, targetScaleH, 0.1);
       hologramGroupRef.current.scale.setScalar(Math.max(0.001, esH));
-      // Inclinacao sutil para parecer projecao
-      hologramGroupRef.current.rotation.y = THREE.MathUtils.lerp(
-        hologramGroupRef.current.rotation.y,
-        (focused || dolly) ? -hologramSide * 0.18 : 0,
-        0.1
-      );
     }
 
     // Hologram shader uniforms
@@ -469,8 +472,9 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
         />
       </mesh>
 
-      {/* 4. HOLOGRAMA LATERAL — emerge do lado no hover, com glitch shader */}
+      {/* 4. HOLOGRAMA FRONTAL — entre cristal e câmera, Billboard (sempre face), com glitch shader */}
       <group ref={hologramGroupRef} scale={0.001}>
+        <Billboard follow lockX={false} lockY={false} lockZ={false}>
         {/* Frame brilhante atras */}
         <mesh position={[0, 0, -0.02]} scale={[1.06, 1.08, 1]}>
           <planeGeometry args={[4.2, 2.36]} />
@@ -554,6 +558,7 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
             `}
           />
         </mesh>
+        </Billboard>
       </group>
 
       {/* 5. Caustica chao */}
