@@ -41,9 +41,17 @@ type Props = {
   getProgress: () => number;
 };
 
+type ShatterShader = {
+  uniforms: {
+    uProgress: { value: number };
+    uTime: { value: number };
+    [key: string]: THREE.IUniform;
+  };
+};
+
 type ShatterMeshData = {
   mesh: THREE.Mesh;
-  shaderRef: { current: THREE.Shader | null };
+  shaderRef: { current: ShatterShader | null };
 };
 
 function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
@@ -106,12 +114,12 @@ function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
   const srcMat = (Array.isArray(src.material) ? src.material[0] : src.material) as THREE.Material;
   const mat = (srcMat as any).clone() as THREE.MeshStandardMaterial;
   mat.transparent = true; // permitira fade tambem se quisermos
-  const shaderRef: { current: THREE.Shader | null } = { current: null };
+  const shaderRef: { current: ShatterShader | null } = { current: null };
 
   mat.onBeforeCompile = (shader) => {
     shader.uniforms.uProgress = { value: 0 };
     shader.uniforms.uTime = { value: 0 };
-    shaderRef.current = shader;
+    shaderRef.current = shader as unknown as ShatterShader;
 
     shader.vertexShader = shader.vertexShader
       .replace(
