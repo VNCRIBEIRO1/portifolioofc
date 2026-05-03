@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/seed-cases.mjs",
-    "prebuild": "node scripts/seed-cases.mjs",
+    "predev": "node scripts/seed-cases.mjs && node scripts/generate-crystals.mjs",
+    "prebuild": "node scripts/seed-cases.mjs && node scripts/generate-crystals.mjs",
     "dev": "next dev -p 3003",
     "build": "next build",
     "start": "next start -p 3003",
@@ -35,6 +35,9 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.3.0",
+    "@gltf-transform/extensions": "^4.3.0",
+    "@gltf-transform/functions": "^4.3.0",
     "@types/node": "^20.16.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",

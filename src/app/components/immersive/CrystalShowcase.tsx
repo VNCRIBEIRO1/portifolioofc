@@ -16,12 +16,16 @@
  * Click → setOpenedCrystal(i) + dolly. ESC fecha.
  */
 
-import { Sparkles, useTexture, Billboard } from "@react-three/drei";
+import { Sparkles, useTexture, Billboard, useGLTF } from "@react-three/drei";
 import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { glitchClock } from "./glitch";
 import { useImmersive } from "./store";
+
+// Pre-carrega 11 GLBs procedurais unicos (gerados por scripts/generate-crystals.mjs)
+const CRYSTAL_SLUGS = ["cerbelera","andresa","apex","lumen","onda","pulse","atelier","forge","northwind","kira","scholae"];
+CRYSTAL_SLUGS.forEach(s => useGLTF.preload(`/models/crystals/${s}.glb`));
 
 export type GemKind = "icosa" | "octa" | "dodeca" | "bipyramid";
 
@@ -231,25 +235,29 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
 
   const texture = useMockupTexture(info);
 
-  // Geometria do shell — varia por kind
+  // Geometria UNICA gerada por scripts/generate-crystals.mjs (procedural com noise)
+  const gltf = useGLTF(`/models/crystals/${info.slug}.glb`) as any;
+  const outerGeo = useMemo<THREE.BufferGeometry | null>(() => {
+    const node = gltf?.nodes?.[`outer_${info.slug}`];
+    return node?.geometry ?? null;
+  }, [gltf, info.slug]);
+  const innerGeo = useMemo<THREE.BufferGeometry | null>(() => {
+    const node = gltf?.nodes?.[`inner_${info.slug}`];
+    return node?.geometry ?? null;
+  }, [gltf, info.slug]);
+
+  // Fallback: caso GLB falhe carregar, usa primitiva basica
   const shellGeoEl = useMemo(() => {
+    if (outerGeo) return <primitive object={outerGeo} attach="geometry" />;
     switch (info.kind) {
-      case "octa":
-        return <octahedronGeometry args={[info.size, 0]} />;
-      case "dodeca":
-        return <dodecahedronGeometry args={[info.size * 0.92, 0]} />;
+      case "octa": return <octahedronGeometry args={[info.size, 0]} />;
+      case "dodeca": return <dodecahedronGeometry args={[info.size * 0.92, 0]} />;
       case "bipyramid":
-        return (
-          <primitive
-            object={makeBipyramidGeometry(info.size * 0.7, info.size * 1.6, 6)}
-            attach="geometry"
-          />
-        );
+        return <primitive object={makeBipyramidGeometry(info.size * 0.7, info.size * 1.6, 6)} attach="geometry" />;
       case "icosa":
-      default:
-        return <icosahedronGeometry args={[info.size, 0]} />;
+      default: return <icosahedronGeometry args={[info.size, 0]} />;
     }
-  }, [info.kind, info.size]);
+  }, [outerGeo, info.kind, info.size]);
 
   useEffect(() => glitchClock.subscribe(setGlitch), []);
   useEffect(() => () => {
@@ -438,9 +446,11 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
         />
       </mesh>
 
-      {/* 1c. Camada interna de facetas — geometria nested para profundidade */}
+      {/* 1c. Camada interna de facetas — geometria UNICA nested do GLB para profundidade real */}
       <mesh scale={0.62} rotation={[0.6, 0.4, 0.2]}>
-        {info.kind === "octa" ? (
+        {innerGeo ? (
+          <primitive object={innerGeo} attach="geometry" />
+        ) : info.kind === "octa" ? (
           <octahedronGeometry args={[info.size, 0]} />
         ) : info.kind === "dodeca" ? (
           <icosahedronGeometry args={[info.size * 0.95, 0]} />
