@@ -9,8 +9,9 @@ import { CTAText3D, Manifesto3D } from "./Manifesto3D";
 import { Hero3DText } from "./Hero3DText";
 import { Post } from "./Post";
 import { ScrollCamera } from "./ScrollCamera";
-import { Bubbles, DepthTunnel } from "./Tunnel";
-import { SpeedStreaks, HorizonGodRays } from "./Streaks";
+import { Cosmos } from "./Cosmos";
+import { BlackHole } from "./BlackHole";
+import { SpeedStreaks } from "./Streaks";
 import { useImmersive } from "./store";
 
 export function Scene() {
@@ -18,7 +19,6 @@ export function Scene() {
 
   useEffect(() => {
     const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // V4: NAO desligar imersivo so por largura — o gate principal vive em Immersive.tsx
     setReducedMotion(mqMotion.matches);
 
     const onResize = () => {
@@ -43,24 +43,28 @@ export function Scene() {
           toneMapping: THREE.ACESFilmicToneMapping,
         }}
         dpr={[1, 1.5]}
-        camera={{ position: [0, 0, 20], fov: 55, near: 0.1, far: 320 }}
-        style={{ background: "#03030c" }}
+        camera={{ position: [0, 0, 20], fov: 55, near: 0.1, far: 600 }}
+        style={{ background: "#000005" }}
       >
-        <color attach="background" args={["#03030c"]} />
-        <fog attach="fog" args={["#01010a", 12, 90]} />
+        {/* Background cosmico profundo */}
+        <color attach="background" args={["#000005"]} />
+        {/* Fog mais distante para preservar estrelas/galaxias no horizonte */}
+        <fog attach="fog" args={["#000005", 80, 320]} />
 
-        <ambientLight intensity={0.4} color="#c5cde8" />
-        <directionalLight position={[10, 20, 10]} intensity={0.7} color="#e8e8f0" />
-        <directionalLight position={[-10, -10, -50]} intensity={0.4} color="#9ba3c4" />
-        {/* God ray pontual no abismo */}
-        <pointLight position={[0, 0, -290]} intensity={4} color="#c5cde8" distance={40} />
+        {/* Iluminacao estelar — temperatura mista */}
+        <ambientLight intensity={0.3} color="#9ba3c4" />
+        <directionalLight position={[10, 20, 10]} intensity={0.5} color="#e8e8f0" />
+        <directionalLight position={[-10, -10, -50]} intensity={0.35} color="#7a82a8" />
+        {/* Pulso quente vindo do buraco negro */}
+        <pointLight position={[0, 0, -290]} intensity={6} color="#ffd5b8" distance={120} decay={1.5} />
 
         <Suspense fallback={null}>
           <ScrollCamera />
-          <DepthTunnel />
-          {!reducedMotion && <Bubbles />}
+          {/* AMBIENTE COSMICO */}
+          <Cosmos />
+          <BlackHole />
           {!reducedMotion && <SpeedStreaks />}
-          <HorizonGodRays />
+          {/* CONTEUDO */}
           <Hero3DText />
           <Manifesto3D />
           <CrystalShowcase />

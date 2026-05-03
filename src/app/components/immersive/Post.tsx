@@ -29,15 +29,16 @@ export function Post() {
 
   return (
     <EffectComposer multisampling={2}>
-      <Bloom intensity={0.7} luminanceThreshold={0.72} luminanceSmoothing={0.4} mipmapBlur />
+      {/* Bloom cosmico: threshold mais alto para isolar estrelas/galaxias/disco */}
+      <Bloom intensity={1.15} luminanceThreshold={0.55} luminanceSmoothing={0.5} mipmapBlur radius={0.85} />
       <ChromaticAberration
         offset={offsetRef.current}
         radialModulation={false}
         modulationOffset={0}
         blendFunction={BlendFunction.NORMAL}
       />
-      <Noise opacity={0.03} blendFunction={BlendFunction.OVERLAY} />
-      <Vignette eskil={false} offset={0.25} darkness={0.75} />
+      <Noise opacity={0.025} blendFunction={BlendFunction.OVERLAY} />
+      <Vignette eskil={false} offset={0.2} darkness={0.85} />
     </EffectComposer>
   );
 }

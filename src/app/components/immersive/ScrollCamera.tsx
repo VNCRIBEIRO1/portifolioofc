@@ -23,12 +23,14 @@ export function ScrollCamera() {
   const lookAt = useRef(new THREE.Vector3(0, 0, 0));
   const fovTarget = useRef(55);
   const dollyState = useRef<{ id: number; t: number } | null>(null);
+  const lookOverride = useRef(new THREE.Vector3());
+  const lookActive = useRef(false);
 
   useEffect(() => {
     if (camera instanceof THREE.PerspectiveCamera) {
       camera.fov = 55;
       camera.near = 0.1;
-      camera.far = 320;
+      camera.far = 600;
       camera.updateProjectionMatrix();
     }
   }, [camera]);
@@ -78,31 +80,45 @@ export function ScrollCamera() {
           dollyState.current = { id: dolly, t: 0 };
         }
         dollyState.current.t += delta;
-        const dt = Math.min(dollyState.current.t / 1.4, 1);
+        // Hold time: 2.5s total (1.0s in, 1.0s hold, 0.5s ease)
+        const dt = Math.min(dollyState.current.t / 1.0, 1);
         const eased = 1 - Math.pow(1 - dt, 3);
+        // Posicao FRONTAL ao cristal: +8 unidades em Z (cristal esta em c.z, camera em c.z + 8)
+        // Eixo X/Y centrado no cristal (offset)
         target.current.set(
           THREE.MathUtils.lerp(x, c.offset[0], eased),
           THREE.MathUtils.lerp(y, c.offset[1], eased),
-          THREE.MathUtils.lerp(z, c.z + 5, eased)
+          THREE.MathUtils.lerp(z, c.z + 8, eased)
         );
-        fovTarget.current = THREE.MathUtils.lerp(55, 28, eased);
+        // FOV: zoom dolly de 55 para 24 (mais cinematografico)
+        fovTarget.current = THREE.MathUtils.lerp(55, 24, eased);
+        // Mira direta no cristal (override do lookY normal)
+        lookOverride.current.copy(new THREE.Vector3(c.offset[0], c.offset[1], c.z));
+        lookActive.current = true;
 
-        if (dollyState.current.t > 1.8) {
+        if (dollyState.current.t > 2.5) {
           useImmersive.getState().setDollyTarget(-1);
           dollyState.current = null;
+          lookActive.current = false;
         }
       }
     } else {
       dollyState.current = null;
+      lookActive.current = false;
     }
 
     camera.position.lerp(target.current, 0.10);
 
-    lookAt.current.set(
-      target.current.x * 0.5,
-      target.current.y * 0.5 + lookY,
-      target.current.z - 8
-    );
+    if (lookActive.current) {
+      // Dolly: mira direta no cristal
+      lookAt.current.lerp(lookOverride.current, 0.15);
+    } else {
+      lookAt.current.set(
+        target.current.x * 0.5,
+        target.current.y * 0.5 + lookY,
+        target.current.z - 8
+      );
+    }
     camera.lookAt(lookAt.current);
 
     if (camera instanceof THREE.PerspectiveCamera) {
