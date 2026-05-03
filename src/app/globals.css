@@ -5,28 +5,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  /* DARK CINEMATIC — Juan Mora style */
-  --background: #0a0a0a;
-  --foreground: #f5f5f4;
-  --accent: #f43f5e;
-  --muted: #a3a3a3;
-  --bg: #0a0a0a;
-  --bg-soft: #141414;
-  --bg-elev: #1c1c1c;
-  --ink: #f5f5f4;
-  --ink-soft: #d4d4d4;
-  --ink-mute: #a3a3a3;
-  --cream: #f5efe6;
-  --rose: #f43f5e;
-  --amber: #f59e0b;
-  --emerald: #10b981;
-  --violet: #8b5cf6;
-  --electric: #38bdf8;
-  --border: rgba(255,255,255,0.08);
-  --border-strong: rgba(255,255,255,0.18);
+  /* LIQUID MERCURY — Immersive */
+  --bg: #03030c;
+  --ink: #e8e8f0;
+  --dim: #9ba3c4;
+  --accent: #b8c0dc;
+  --glow: #d8dfee;
+  --ripple: #4a5375;
+  --abyss: #01010a;
+  /* Legacy tokens retained for old components */
+  --background: #03030c;
+  --foreground: #e8e8f0;
+  --muted: #6b6b80;
+  --bg-soft: #07071a;
+  --bg-elev: #0c0c20;
+  --ink-soft: #d4d4e0;
+  --ink-mute: #6b6b80;
+  --cream: #e8e8f0;
+  --rose: #9ba3c4;
+  --amber: #c5cde8;
+  --emerald: #9ba3c4;
+  --violet: #6b6b80;
+  --electric: #c5cde8;
+  --border: rgba(232,232,240,0.08);
+  --border-strong: rgba(232,232,240,0.20);
 }
 
-html, body { background: #0a0a0a; color: #f5f5f4; }
+html, body { background: #03030c; color: #e8e8f0; }
 
 html {
   scroll-behavior: smooth;

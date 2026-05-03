@@ -3,27 +3,45 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/seed-cases.mjs",
+    "prebuild": "node scripts/seed-cases.mjs",
     "dev": "next dev -p 3003",
     "build": "next build",
     "start": "next start -p 3003",
-    "lint": "next lint"
+    "lint": "next lint",
+    "bootstrap": "pwsh ./scripts/bootstrap.ps1",
+    "assets:hdri": "node scripts/fetch-hdri.mjs",
+    "assets:pbr": "node scripts/fetch-pbr.mjs",
+    "assets:mockups": "node scripts/comfy-generate.mjs --batch=all",
+    "assets:optimize": "node scripts/optimize-images.mjs",
+    "assets:all": "npm run assets:hdri && npm run assets:pbr && npm run assets:mockups && npm run assets:optimize",
+    "audit": "node scripts/audit-lighthouse.mjs",
+    "smoke": "node scripts/smoke-playwright.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^9.114.0",
+    "@react-three/fiber": "^8.17.10",
+    "@react-three/postprocessing": "^2.16.2",
     "@studio-freight/react-lenis": "^0.0.47",
     "framer-motion": "^11.11.0",
     "gsap": "^3.15.0",
     "lottie-react": "^2.4.1",
     "next": "14.2.15",
+    "postprocessing": "^6.36.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "three": "^0.170.0",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.16.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
+    "@types/three": "^0.170.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
+    "sharp": "^0.33.5",
     "tailwindcss": "^3.4.13",
     "typescript": "^5.6.0"
   }
