@@ -3,27 +3,18 @@
 /**
  * CrystalShatter.tsx
  *
- * Shatter MESH-BASED: a propria malha do cristal (com sua textura/cor de
- * vertice + PBR) e quebrada em triangulos individuais que se afastam do
- * centro, giram em torno do proprio centroide e voltam para reformar
- * a pedra original — preservando a textura e a fisica.
+ * Shatter MESH-BASED por SHARDS AGRUPADOS: a malha do cristal preserva
+ * textura/PBR, mas os triangulos sao agrupados em no maximo 20 blocos.
+ * Cada bloco se move como uma peca coesa, evitando o efeito de milhares
+ * de triangulos independentes.
  *
  * Tecnica:
- *  1. Para cada Mesh dentro do scene GLTF, clonamos a geometria e
- *     convertemos para non-indexed (toNonIndexed) — assim cada
- *     triangulo tem seus 3 vertices proprios, nao compartilhados.
- *  2. Calculamos o centroide de cada triangulo e gravamos como atributo
- *     `aCentroid` (replicado nos 3 vertices). Tambem gravamos:
- *       - aDir: direcao radial unitaria do centro do mesh ate o centroide
- *       - aAxis: eixo aleatorio para spin
- *  3. Clonamos o material original (MeshStandardMaterial) e injetamos via
- *     onBeforeCompile o seguinte no vertex shader:
- *       transformed = position - aCentroid;        // bring to local centroid space
- *       transformed = rotate(aAxis, t * progress); // spin in place
- *       transformed += aCentroid;                  // back to mesh space
- *       transformed += aDir * progress * factor;   // explode outward
- *  4. Uniform `uProgress` (0..1) controla a quantidade de quebra. Em 0
- *     a malha aparece IDENTICA a original (textura, normais, PBR).
+ *  1. Cada mesh e convertida para non-indexed.
+ *  2. Triangulos sao atribuidos a um conjunto pequeno de shards por
+ *     direcao espacial (seeds esfericas deterministicas).
+ *  3. Cada shard recebe centroide/pivo, direcao radial, eixo de spin e
+ *     seed propria.
+ *  4. No shader, todos os triangulos daquele shard se movem juntos.
  *
  * Nenhuma geometria procedural — apenas a propria pedra.
  */
@@ -31,6 +22,8 @@
 import { useMemo, useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+
+const MAX_SHARDS = 20;
 
 type Props = {
   /** Scene GLTF do cristal (resultado de useGLTF().scene.clone()). */
@@ -54,7 +47,59 @@ type ShatterMeshData = {
   shaderRef: { current: ShatterShader | null };
 };
 
-function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
+function hashString(value: string) {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function randomUnit(rand: () => number) {
+  const z = rand() * 2 - 1;
+  const theta = rand() * Math.PI * 2;
+  const radius = Math.sqrt(Math.max(0, 1 - z * z));
+  return new THREE.Vector3(
+    Math.cos(theta) * radius,
+    z,
+    Math.sin(theta) * radius
+  );
+}
+
+function allocatePieceCounts(weights: number[], budget: number) {
+  if (weights.length === 0) return [];
+  const counts = new Array(weights.length).fill(1);
+  let remaining = Math.max(0, budget - weights.length);
+
+  while (remaining > 0) {
+    let bestIndex = 0;
+    let bestScore = -Infinity;
+    for (let i = 0; i < weights.length; i++) {
+      const score = weights[i] / counts[i];
+      if (score > bestScore) {
+        bestScore = score;
+        bestIndex = i;
+      }
+    }
+    counts[bestIndex] += 1;
+    remaining -= 1;
+  }
+
+  return counts;
+}
+
+function buildShatterMesh(src: THREE.Mesh, pieceCount: number, meshIndex: number): ShatterMeshData {
   // 1. Clona a geometria e converte para non-indexed
   let geo = src.geometry.clone();
   if (geo.index) geo = geo.toNonIndexed();
@@ -63,17 +108,23 @@ function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
   const positions = posAttr.array as Float32Array;
   const vCount = posAttr.count;
   const triCount = vCount / 3;
+  const shardCount = Math.max(1, Math.min(pieceCount, triCount));
 
-  // Bbox centro p/ direcao radial coerente
+  // Centro local da mesh para direcoes radiais coerentes.
   geo.computeBoundingSphere();
-  const cx0 = geo.boundingSphere?.center.x ?? 0;
-  const cy0 = geo.boundingSphere?.center.y ?? 0;
-  const cz0 = geo.boundingSphere?.center.z ?? 0;
+  const center = geo.boundingSphere?.center.clone() ?? new THREE.Vector3();
+  const rand = mulberry32(hashString(`${src.name}:${meshIndex}:${shardCount}`));
 
-  const aCentroid = new Float32Array(vCount * 3);
-  const aDir = new Float32Array(vCount * 3);
-  const aAxis = new Float32Array(vCount * 3);
-  const aSeed = new Float32Array(vCount); // 1 float por vertice (replicado)
+  const shards = Array.from({ length: shardCount }, () => ({
+    seedDir: randomUnit(rand),
+    axis: randomUnit(rand),
+    centroid: new THREE.Vector3(),
+    dir: new THREE.Vector3(),
+    seed: rand(),
+    count: 0,
+  }));
+
+  const triShard = new Uint16Array(triCount);
 
   for (let i = 0; i < triCount; i++) {
     const i0 = i * 9;
@@ -81,33 +132,71 @@ function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
     const cy = (positions[i0 + 1] + positions[i0 + 4] + positions[i0 + 7]) / 3;
     const cz = (positions[i0 + 2] + positions[i0 + 5] + positions[i0 + 8]) / 3;
 
-    let dx = cx - cx0, dy = cy - cy0, dz = cz - cz0;
-    const dlen = Math.hypot(dx, dy, dz) || 1;
-    dx /= dlen; dy /= dlen; dz /= dlen;
+    const triCentroid = new THREE.Vector3(cx, cy, cz);
+    const triDir = triCentroid.clone().sub(center);
+    if (triDir.lengthSq() < 1e-6) {
+      triDir.copy(shards[i % shardCount].seedDir);
+    } else {
+      triDir.normalize();
+    }
 
-    // eixo aleatorio coerente por triangulo
-    let ax = Math.random() - 0.5;
-    let ay = Math.random() - 0.5;
-    let az = Math.random() - 0.5;
-    const al = Math.hypot(ax, ay, az) || 1;
-    ax /= al; ay /= al; az /= al;
+    let bestShard = 0;
+    let bestDot = -Infinity;
+    for (let shardIndex = 0; shardIndex < shardCount; shardIndex++) {
+      const dot = triDir.dot(shards[shardIndex].seedDir);
+      if (dot > bestDot) {
+        bestDot = dot;
+        bestShard = shardIndex;
+      }
+    }
 
-    const seed = Math.random();
+    triShard[i] = bestShard;
+    shards[bestShard].centroid.add(triCentroid);
+    shards[bestShard].count += 1;
+  }
 
-    for (let v = 0; v < 3; v++) {
-      const o = (i * 3 + v) * 3;
-      aCentroid[o + 0] = cx; aCentroid[o + 1] = cy; aCentroid[o + 2] = cz;
-      aDir[o + 0] = dx;       aDir[o + 1] = dy;       aDir[o + 2] = dz;
-      aAxis[o + 0] = ax;      aAxis[o + 1] = ay;      aAxis[o + 2] = az;
-      aSeed[i * 3 + v] = seed;
+  for (let i = 0; i < shardCount; i++) {
+    const shard = shards[i];
+    if (shard.count > 0) {
+      shard.centroid.divideScalar(shard.count);
+    } else {
+      shard.centroid.copy(center).add(shard.seedDir.clone().multiplyScalar(0.25));
+    }
+
+    shard.dir.copy(shard.centroid).sub(center);
+    if (shard.dir.lengthSq() < 1e-6) {
+      shard.dir.copy(shard.seedDir);
+    } else {
+      shard.dir.normalize();
     }
   }
 
-  geo.setAttribute("aCentroid", new THREE.BufferAttribute(aCentroid, 3));
-  geo.setAttribute("aDir", new THREE.BufferAttribute(aDir, 3));
-  geo.setAttribute("aAxis", new THREE.BufferAttribute(aAxis, 3));
-  geo.setAttribute("aSeed", new THREE.BufferAttribute(aSeed, 1));
-  // Recomputa normais flat por triangulo (consistente com toNonIndexed)
+  const aShardCentroid = new Float32Array(vCount * 3);
+  const aShardDir = new Float32Array(vCount * 3);
+  const aShardAxis = new Float32Array(vCount * 3);
+  const aShardSeed = new Float32Array(vCount);
+
+  for (let i = 0; i < triCount; i++) {
+    const shard = shards[triShard[i]];
+    for (let v = 0; v < 3; v++) {
+      const o = (i * 3 + v) * 3;
+      aShardCentroid[o + 0] = shard.centroid.x;
+      aShardCentroid[o + 1] = shard.centroid.y;
+      aShardCentroid[o + 2] = shard.centroid.z;
+      aShardDir[o + 0] = shard.dir.x;
+      aShardDir[o + 1] = shard.dir.y;
+      aShardDir[o + 2] = shard.dir.z;
+      aShardAxis[o + 0] = shard.axis.x;
+      aShardAxis[o + 1] = shard.axis.y;
+      aShardAxis[o + 2] = shard.axis.z;
+      aShardSeed[i * 3 + v] = shard.seed;
+    }
+  }
+
+  geo.setAttribute("aShardCentroid", new THREE.BufferAttribute(aShardCentroid, 3));
+  geo.setAttribute("aShardDir", new THREE.BufferAttribute(aShardDir, 3));
+  geo.setAttribute("aShardAxis", new THREE.BufferAttribute(aShardAxis, 3));
+  geo.setAttribute("aShardSeed", new THREE.BufferAttribute(aShardSeed, 1));
   geo.computeVertexNormals();
 
   // 2. Clona o material e injeta o shader
@@ -125,10 +214,10 @@ function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
       .replace(
         "#include <common>",
         `#include <common>
-        attribute vec3 aCentroid;
-        attribute vec3 aDir;
-        attribute vec3 aAxis;
-        attribute float aSeed;
+        attribute vec3 aShardCentroid;
+        attribute vec3 aShardDir;
+        attribute vec3 aShardAxis;
+        attribute float aShardSeed;
         uniform float uProgress;
         uniform float uTime;
 
@@ -147,27 +236,25 @@ function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
         "#include <begin_vertex>",
         `vec3 transformed = position;
         if (uProgress > 0.001) {
-          // 1. relativo ao centroide
-          vec3 rel = transformed - aCentroid;
-          // 2. spin em torno do centroide com velocidade variavel por aSeed
-          float ang = uProgress * (3.0 + aSeed * 4.0) + uTime * 0.6 * uProgress;
-          rel = axisAngle(aAxis, ang) * rel;
-          // 3. volta ao espaco da malha
-          transformed = aCentroid + rel;
-          // 4. expande para fora — distancia variavel por seed
-          float radF = 0.6 + aSeed * 0.8;
-          transformed += aDir * uProgress * radF;
-          // 5. ruido organico (oscila + leve deriva tangencial)
-          float wob = sin(uTime * (1.5 + aSeed * 2.0) + aSeed * 6.28) * 0.06 * uProgress;
-          transformed += aDir * wob;
+          float burst = smoothstep(0.0, 0.45, uProgress);
+          float orbit = smoothstep(0.3, 1.0, uProgress);
+          vec3 rel = transformed - aShardCentroid;
+          float ang = burst * (1.2 + aShardSeed * 1.1) + uTime * (0.35 + aShardSeed * 0.55) * orbit;
+          rel = axisAngle(aShardAxis, ang) * rel;
+          transformed = aShardCentroid + rel;
+          transformed += aShardDir * burst * (1.2 + aShardSeed * 0.9);
+          vec3 tangent = normalize(cross(aShardAxis, aShardDir));
+          transformed += tangent * sin(uTime * (1.1 + aShardSeed * 1.6) + aShardSeed * 6.2831) * 0.14 * orbit;
         }`
       )
       .replace(
         "#include <beginnormal_vertex>",
         `vec3 objectNormal = normal;
         if (uProgress > 0.001) {
-          float ang = uProgress * (3.0 + aSeed * 4.0) + uTime * 0.6 * uProgress;
-          objectNormal = axisAngle(aAxis, ang) * objectNormal;
+          float burst = smoothstep(0.0, 0.45, uProgress);
+          float orbit = smoothstep(0.3, 1.0, uProgress);
+          float ang = burst * (1.2 + aShardSeed * 1.1) + uTime * (0.35 + aShardSeed * 0.55) * orbit;
+          objectNormal = axisAngle(aShardAxis, ang) * objectNormal;
         }`
       );
   };
@@ -182,15 +269,29 @@ function buildShatterMesh(src: THREE.Mesh): ShatterMeshData {
 export function CrystalShatter({ scene, scale, getProgress }: Props) {
   const groupRef = useRef<THREE.Group>(null!);
 
-  // Constroi UMA vez por scene change
+  // Constroi uma vez por scene change com ate MAX_SHARDS shards por cristal.
   const data = useMemo(() => {
-    const list: ShatterMeshData[] = [];
+    const sources: Array<{ mesh: THREE.Mesh; triangleCount: number }> = [];
     scene.traverse((obj) => {
       if ((obj as THREE.Mesh).isMesh) {
-        list.push(buildShatterMesh(obj as THREE.Mesh));
+        const mesh = obj as THREE.Mesh;
+        const posAttr = mesh.geometry.getAttribute("position") as THREE.BufferAttribute | undefined;
+        if (!posAttr) return;
+        const triangleCount = mesh.geometry.index
+          ? mesh.geometry.index.count / 3
+          : posAttr.count / 3;
+        sources.push({ mesh, triangleCount });
       }
     });
-    return list;
+
+    const pieceCounts = allocatePieceCounts(
+      sources.map((source) => source.triangleCount),
+      MAX_SHARDS
+    );
+
+    return sources.map((source, index) => (
+      buildShatterMesh(source.mesh, pieceCounts[index] ?? 1, index)
+    ));
   }, [scene]);
 
   // Injeta os meshes no group (evita recriar arvore React/Fiber)

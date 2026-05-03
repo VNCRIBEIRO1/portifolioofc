@@ -198,14 +198,12 @@ export function CrystalShowcase() {
 function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
   const groupRef = useRef<THREE.Group>(null!);
   const shellRef = useRef<THREE.Mesh>(null!);
-  const realSceneGroupRef = useRef<THREE.Group>(null!);
   const shatterProgressRef = useRef(0);
   const shellMatRef = useRef<THREE.MeshPhysicalMaterial>(null!);
   const hologramGroupRef = useRef<THREE.Group>(null!);
   const hologramMatRef = useRef<THREE.ShaderMaterial>(null!);
   const hologramFrameMatRef = useRef<THREE.MeshBasicMaterial>(null!);
   const causticMatRef = useRef<THREE.ShaderMaterial>(null!);
-  const coreMatRef = useRef<THREE.MeshBasicMaterial>(null!);
   const glowMatRef = useRef<THREE.MeshBasicMaterial>(null!);
   const [glitch, setGlitch] = useState(0);
 
@@ -349,6 +347,11 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
     if (hologramGroupRef.current) {
       const camPos = state.camera.position;
       const crystalWorldPos = groupRef.current.position;
+      const hologramReveal = THREE.MathUtils.smoothstep(
+        shatterProgressRef.current,
+        0.18,
+        0.58
+      );
       // Vetor unitário do cristal para a câmera (em world space).
       const dx = camPos.x - crystalWorldPos.x;
       const dy = camPos.y - crystalWorldPos.y;
@@ -360,7 +363,9 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
       const targetX = ux * hologramDist;
       const targetY = uy * hologramDist + 0.2;
       const targetZ = uz * hologramDist;
-      const targetScaleH = (focused || dolly) ? 1.0 : 0.001;
+      const targetScaleH = (focused || dolly || opened)
+        ? Math.max(0.001, hologramReveal)
+        : 0.001;
 
       hologramGroupRef.current.position.x = THREE.MathUtils.lerp(
         hologramGroupRef.current.position.x, targetX, 0.14
@@ -379,24 +384,28 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
     // Hologram shader uniforms
     if (hologramMatRef.current) {
       const u = hologramMatRef.current.uniforms;
+      const hologramReveal = THREE.MathUtils.smoothstep(
+        shatterProgressRef.current,
+        0.18,
+        0.58
+      );
       u.uTime.value = t;
-      u.uIntensity.value = (focused || dolly) ? 1.0 : 0.0;
+      u.uIntensity.value = (focused || dolly || opened) ? hologramReveal : 0.0;
       u.uGlitch.value = glitch + (focused ? 0.08 : 0); // glitch base mais forte no hover
     }
     if (hologramFrameMatRef.current) {
+      const hologramReveal = THREE.MathUtils.smoothstep(
+        shatterProgressRef.current,
+        0.18,
+        0.58
+      );
       hologramFrameMatRef.current.opacity = THREE.MathUtils.lerp(
         hologramFrameMatRef.current.opacity,
-        (focused || dolly) ? 0.7 : 0,
+        (focused || dolly || opened) ? 0.7 * hologramReveal : 0,
         0.1
       );
     }
 
-    // Core inner: pulse com glow color
-    if (coreMatRef.current) {
-      const pulse = 0.7 + Math.sin(t * 1.5 + index) * 0.25 + (focused ? 0.4 : 0);
-      coreMatRef.current.color.copy(glowColor).multiplyScalar(pulse);
-      coreMatRef.current.opacity = vis;
-    }
     if (glowMatRef.current) {
       const gp = 0.5 + Math.sin(t * 0.9 + index * 1.2) * 0.3;
       glowMatRef.current.color.copy(gemColor).multiplyScalar(gp);
@@ -523,18 +532,6 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
           </mesh>
         </>
       )}
-
-      {/* 2. Inner core — pequena gem brilhante interna */}
-      <mesh>
-        <icosahedronGeometry args={[info.size * 0.22, 1]} />
-        <meshBasicMaterial
-          ref={coreMatRef}
-          color={glowColor}
-          transparent
-          opacity={1}
-          toneMapped={false}
-        />
-      </mesh>
 
       {/* 4. HOLOGRAMA FRONTAL — entre cristal e câmera, Billboard (sempre face), com glitch shader */}
       <group ref={hologramGroupRef} scale={0.001}>
