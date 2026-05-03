@@ -351,9 +351,15 @@ async function writeGLB(spec, outPath) {
 // ============================================================
 // MAIN
 // ============================================================
-// Slugs com GLB fotorrealista (Hunyuan3D-2) em public/models/crystals-real/{slug}.glb
-// — NAO sobrescrevemos o procedural; o componente carrega o real diretamente.
-const REAL_SLUGS = new Set(["cerbelera"]);
+// Slugs com GLB fotorrealista em public/models/crystals-real/{slug}.glb
+//   - cerbelera: Hunyuan3D-2 (PBR + WebP)
+//   - demais 10: TripoSR (vertex colors, gerados de SD refs)
+// Todos os 11 estao em real-mode no componente; deixamos a geracao procedural
+// como fallback opcional caso algum slug seja revertido para realModel=false.
+const REAL_SLUGS = new Set([
+  "cerbelera","andresa","apex","lumen","onda","pulse",
+  "atelier","forge","northwind","kira","scholae",
+]);
 
 (async () => {
   await fs.mkdir(OUT_DIR, { recursive: true });

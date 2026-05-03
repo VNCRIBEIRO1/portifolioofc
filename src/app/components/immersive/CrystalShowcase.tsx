@@ -23,15 +23,13 @@ import * as THREE from "three";
 import { glitchClock } from "./glitch";
 import { useImmersive } from "./store";
 
-// GLBs procedurais (gerados por scripts/generate-crystals.mjs) +
-// GLBs fotorrealistas (Hunyuan3D-2) em public/models/crystals-real/<slug>.glb
+// GLBs fotorrealistas em public/models/crystals-real/<slug>.glb
+//   - cerbelera: Hunyuan3D-2 (PBR + WebP textures)
+//   - demais 10: TripoSR (vertex colors, gerado a partir das refs SD em
+//     public/images/crystal-refs/ via scripts/generate-real-crystals.ps1)
 const CRYSTAL_SLUGS = ["cerbelera","andresa","apex","lumen","onda","pulse","atelier","forge","northwind","kira","scholae"];
-const REAL_MODEL_SLUGS = new Set(["cerbelera"]);
 CRYSTAL_SLUGS.forEach(s => {
-  const path = REAL_MODEL_SLUGS.has(s)
-    ? `/models/crystals-real/${s}.glb`
-    : `/models/crystals/${s}.glb`;
-  useGLTF.preload(path);
+  useGLTF.preload(`/models/crystals-real/${s}.glb`);
 });
 
 export type GemKind = "icosa" | "octa" | "dodeca" | "bipyramid";
@@ -71,65 +69,75 @@ export const CRYSTALS: CrystalCase[] = [
     kind: "octa", size: 2.6, z: -90, offset: [-3.5, 0.8], rotY: 0.3,
     realModel: true },
 
-  // 2. Andresa — SAUDE :: Quartzo rosa luminoso
+  // 2. Andresa — SAUDE :: GLB TripoSR fotorrealista
   { slug: "andresa", title: "Dra. Andresa Martin", nicho: "Saude",
     mockup: "/images/projects/andresa-desktop.png",
     gemColor: "#f8c5d4", glowColor: "#ff7aa8", accent: "#ffb6c8",
-    kind: "dodeca", size: 2.5, z: -104, offset: [3.2, -0.5], rotY: -0.4 },
+    kind: "dodeca", size: 2.5, z: -104, offset: [3.2, -0.5], rotY: -0.4,
+    realModel: true },
 
-  // 3. Apex — SAAS B2B :: Topazio azul-eletrico
+  // 3. Apex — SAAS B2B :: GLB TripoSR fotorrealista
   { slug: "apex", title: "Apex Analytics", nicho: "Landing SaaS B2B",
     mockup: "/images/cases/apex.png",
     gemColor: "#3da8ff", glowColor: "#00e5ff", accent: "#5ec8ff",
-    kind: "bipyramid", size: 2.7, z: -118, offset: [-2.8, 1.2], rotY: 0.5 },
+    kind: "bipyramid", size: 2.7, z: -118, offset: [-2.8, 1.2], rotY: 0.5,
+    realModel: true },
 
-  // 4. Lumen — CRM :: Esmeralda verde-dourado (REFERENCIA do user)
+  // 4. Lumen — CRM :: GLB TripoSR fotorrealista
   { slug: "lumen", title: "Lumen CRM", nicho: "CRM Dashboard",
     mockup: "/images/cases/lumen.png",
     gemColor: "#2dd47a", glowColor: "#ffd54a", accent: "#7be8a8",
-    kind: "bipyramid", size: 2.8, z: -132, offset: [3.8, 0.4], rotY: -0.3 },
+    kind: "bipyramid", size: 2.8, z: -132, offset: [3.8, 0.4], rotY: -0.3,
+    realModel: true },
 
-  // 5. Onda — APP iOS :: Agua-marinha translucida
+  // 5. Onda — APP iOS :: GLB TripoSR fotorrealista
   { slug: "onda", title: "Onda Banking", nicho: "App iOS",
     mockup: "/images/cases/onda.png",
     gemColor: "#5cc8ff", glowColor: "#a8f0ff", accent: "#7dd3fc",
-    kind: "icosa", size: 2.5, z: -146, offset: [-3.3, -0.8], rotY: 0.4 },
+    kind: "icosa", size: 2.5, z: -146, offset: [-3.3, -0.8], rotY: 0.4,
+    realModel: true },
 
-  // 6. Pulse — APP Android :: Rubi vermelho-fogo
+  // 6. Pulse — APP Android :: GLB TripoSR fotorrealista
   { slug: "pulse", title: "Pulse Fit", nicho: "App Android",
     mockup: "/images/cases/pulse.png",
     gemColor: "#e63946", glowColor: "#ff8f6b", accent: "#ff6b8a",
-    kind: "octa", size: 2.6, z: -160, offset: [3.0, 1.0], rotY: -0.5 },
+    kind: "octa", size: 2.6, z: -160, offset: [3.0, 1.0], rotY: -0.5,
+    realModel: true },
 
-  // 7. Atelier — E-COMMERCE :: Ametista violeta-rosado
+  // 7. Atelier — E-COMMERCE :: GLB TripoSR fotorrealista
   { slug: "atelier", title: "Atelier", nicho: "E-commerce Moda",
     mockup: "/images/cases/atelier.png",
     gemColor: "#9d4edd", glowColor: "#e0aaff", accent: "#c77dff",
-    kind: "dodeca", size: 2.6, z: -174, offset: [-3.5, 0.2], rotY: 0.3 },
+    kind: "dodeca", size: 2.6, z: -174, offset: [-3.5, 0.2], rotY: 0.3,
+    realModel: true },
 
-  // 8. Forge — ERP :: Citrino dourado-cobre
+  // 8. Forge — ERP :: GLB TripoSR fotorrealista
   { slug: "forge", title: "Forge", nicho: "ERP / Admin",
     mockup: "/images/cases/forge.png",
     gemColor: "#ff9c1a", glowColor: "#ffe066", accent: "#ffb84a",
-    kind: "bipyramid", size: 2.7, z: -188, offset: [3.4, -0.6], rotY: -0.4 },
+    kind: "bipyramid", size: 2.7, z: -188, offset: [3.4, -0.6], rotY: -0.4,
+    realModel: true },
 
-  // 9. Northwind — INSTITUCIONAL :: Safira azul-real profundo
+  // 9. Northwind — INSTITUCIONAL :: GLB TripoSR fotorrealista
   { slug: "northwind", title: "Northwind Capital", nicho: "Institucional Premium",
     mockup: "/images/cases/northwind.png",
     gemColor: "#1e40af", glowColor: "#60a5fa", accent: "#93c5fd",
-    kind: "octa", size: 2.7, z: -202, offset: [-2.9, 1.0], rotY: 0.5 },
+    kind: "octa", size: 2.7, z: -202, offset: [-2.9, 1.0], rotY: 0.5,
+    realModel: true },
 
-  // 10. Kira — PORTFOLIO EDITORIAL :: Opala iridescente (multi-color)
+  // 10. Kira — PORTFOLIO EDITORIAL :: GLB TripoSR fotorrealista
   { slug: "kira", title: "Kira Tanaka", nicho: "Portfolio Editorial",
     mockup: "/images/cases/kira.png",
     gemColor: "#f0aaff", glowColor: "#80ffea", accent: "#caf0f8",
-    kind: "icosa", size: 2.5, z: -216, offset: [3.1, 0.5], rotY: -0.3 },
+    kind: "icosa", size: 2.5, z: -216, offset: [3.1, 0.5], rotY: -0.3,
+    realModel: true },
 
-  // 11. Scholae — EDUCACIONAL :: Fluorita verde-azul
+  // 11. Scholae — EDUCACIONAL :: GLB TripoSR fotorrealista
   { slug: "scholae", title: "Scholae", nicho: "Educacional",
     mockup: "/images/cases/scholae.png",
     gemColor: "#06d6a0", glowColor: "#118ab2", accent: "#48cae4",
-    kind: "dodeca", size: 2.6, z: -230, offset: [-3.2, -0.8], rotY: 0.4 },
+    kind: "dodeca", size: 2.6, z: -230, offset: [-3.2, -0.8], rotY: 0.4,
+    realModel: true },
 ];
 
 /** Placeholder canvas texture (caso o mockup nao exista ainda). */
