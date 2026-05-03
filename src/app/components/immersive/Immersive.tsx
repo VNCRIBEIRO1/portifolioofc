@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { HeroSSR } from "./HeroSSR";
 import { Overlay } from "./Overlay";
+import { MockupOverlay } from "./MockupOverlay";
 import { StaticHome } from "./StaticHome";
 import { useImmersive } from "./store";
 // Importa para registrar o tick global do glitch (side-effect)
@@ -104,6 +105,7 @@ export function Immersive() {
       <HeroSSR canvasReady={canvasReady} />
       {canvasReady && <Scene />}
       <Overlay />
+      <MockupOverlay />
       <div style={{ height: `${SCROLL_HEIGHT_VH}vh` }} aria-hidden="true" />
     </>
   );
