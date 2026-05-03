@@ -567,25 +567,25 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
                 float g = texture2D(uMap, uv).g;
                 float b = texture2D(uMap, uv - vec2(split, 0.0)).b;
                 vec3 col = vec3(r, g, b);
-                // Scanlines
-                float scan = 0.85 + 0.15 * sin(uv.y * 320.0 + uTime * 4.0);
+                // Scanlines suaves
+                float scan = 0.92 + 0.08 * sin(uv.y * 320.0 + uTime * 4.0);
                 col *= scan;
-                // Tinting holografico (mais forte no glitch)
-                col = mix(col, col * uColor * 1.5, 0.18);
+                // Tinting holografico SUTIL (mantem mockup legivel)
+                col = mix(col, col * (0.7 + uColor * 0.6), 0.12);
                 // Vinheta suave
                 float vig = smoothstep(1.2, 0.4, distance(uv, vec2(0.5)));
                 col *= vig;
                 // Static noise
-                float n = rand(uv * 800.0 + uTime) * 0.06;
+                float n = rand(uv * 800.0 + uTime) * 0.04;
                 col += n;
                 // Slice glitch (bandas que saltam de cor)
                 float slice = step(0.985, rand(vec2(floor(uv.y * 24.0), floor(uTime * 18.0))));
-                col = mix(col, vec3(1.0) - col, slice * uGlitch * 0.6);
+                col = mix(col, vec3(1.0) - col, slice * uGlitch * 0.5);
                 // Edge glow
                 float edge = smoothstep(0.0, 0.04, uv.x) * smoothstep(1.0, 0.96, uv.x)
                            * smoothstep(0.0, 0.04, uv.y) * smoothstep(1.0, 0.96, uv.y);
-                col += uColor * (1.0 - edge) * 0.6;
-                gl_FragColor = vec4(col, uIntensity * (0.85 + uGlitch * 0.15));
+                col += uColor * (1.0 - edge) * 0.4;
+                gl_FragColor = vec4(col, uIntensity * (0.96 + uGlitch * 0.04));
               }
             `}
           />
