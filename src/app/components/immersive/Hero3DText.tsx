@@ -38,6 +38,11 @@ export function GlitchText3D({
 }: Props) {
   const groupRef = useRef<THREE.Group>(null!);
   const matRef = useRef<THREE.MeshPhysicalMaterial>(null!);
+  // Ghost layers p/ chromatic aberration (estilo glitch profissional)
+  const ghostRedRef = useRef<THREE.Group>(null!);
+  const ghostCyanRef = useRef<THREE.Group>(null!);
+  const ghostRedMatRef = useRef<THREE.MeshBasicMaterial>(null!);
+  const ghostCyanMatRef = useRef<THREE.MeshBasicMaterial>(null!);
   const [glitch, setGlitch] = useState(0);
 
   useEffect(() => {
@@ -51,15 +56,10 @@ export function GlitchText3D({
     const phase = position[0] + position[1]; // offset por instancia
 
     // === KINETIC TYPOGRAPHY: deformacao continua sempre-on ===
-    // Micro-jitter X sustentado (multi-frequencia, parece variavel font axis)
     const xJ = Math.sin(t * 3.1 + phase) * 0.022 + Math.sin(t * 9.7 + phase) * 0.011;
-    // Scale Y pulsante (peso variavel)
     const sY = 1 + Math.sin(t * 4.7) * 0.04 + Math.sin(t * 11.3 + phase) * 0.018;
-    // Scale X pulsante (largura variavel)
     const sX = 1 + Math.sin(t * 5.3 + 0.7) * 0.022 + Math.sin(t * 8.1) * 0.012;
-    // Rotacao Z oscilante leve (italic axis)
     const rZ = Math.sin(t * 1.7 + phase) * 0.012 + (Math.random() - 0.5) * 0.004;
-    // Idle respiration overlay
     const yBob = Math.sin(t * 0.6) * 0.04;
 
     groupRef.current.rotation.y = Math.sin(t * 0.25) * 0.04;
@@ -69,20 +69,42 @@ export function GlitchText3D({
     groupRef.current.scale.x = sX;
     groupRef.current.rotation.z = rZ;
 
-    // Emissive pulse continuo
     let emissive = 0.35 + 0.25 * Math.abs(Math.sin(t * 2.1 + phase));
 
-    // Glitch SPIKE (bursts de glitchClock) acumula em cima do continuo
+    // === GLITCH SPIKE PROFISSIONAL (bursts a cada 2s) ===
+    // Camadas: chromatic aberration RGB + slice tear + scale crush
     if (glitch > 0.01) {
-      groupRef.current.position.x += (Math.random() - 0.5) * glitch * 0.45;
-      groupRef.current.scale.y *= 1 + (Math.random() - 0.5) * glitch * 0.18;
-      groupRef.current.scale.x *= 1 + (Math.random() - 0.5) * glitch * 0.06;
-      groupRef.current.rotation.z += (Math.random() - 0.5) * glitch * 0.04;
-      emissive += glitch * 1.1;
+      // Slice tear: jitter intenso em X com salto digital (steps)
+      const tear = Math.sign(Math.sin(t * 60)) * glitch * 0.35;
+      groupRef.current.position.x += tear + (Math.random() - 0.5) * glitch * 0.3;
+      // Crush vertical (scale Y)
+      groupRef.current.scale.y *= 1 + (Math.random() - 0.5) * glitch * 0.22;
+      groupRef.current.scale.x *= 1 + (Math.random() - 0.5) * glitch * 0.08;
+      // Skew/rot Z forte
+      groupRef.current.rotation.z += (Math.random() - 0.5) * glitch * 0.06;
+      emissive += glitch * 1.4;
     }
 
     if (matRef.current) {
       matRef.current.emissiveIntensity = emissive;
+    }
+
+    // === Ghost layers: chromatic aberration ===
+    // Red ghost desloca para +X, cyan para -X — visiveis APENAS durante burst
+    const ghostShift = glitch * 0.12 + Math.sin(t * 47) * glitch * 0.05;
+    if (ghostRedRef.current) {
+      ghostRedRef.current.position.x = ghostShift;
+      ghostRedRef.current.position.y = (Math.random() - 0.5) * glitch * 0.04;
+    }
+    if (ghostCyanRef.current) {
+      ghostCyanRef.current.position.x = -ghostShift;
+      ghostCyanRef.current.position.y = (Math.random() - 0.5) * glitch * 0.04;
+    }
+    if (ghostRedMatRef.current) {
+      ghostRedMatRef.current.opacity = glitch * 0.85;
+    }
+    if (ghostCyanMatRef.current) {
+      ghostCyanMatRef.current.opacity = glitch * 0.85;
     }
 
     // Visibilidade por Z da câmera
@@ -98,20 +120,24 @@ export function GlitchText3D({
     }
   });
 
+  // Compartilha props do Text3D entre as camadas
+  const text3dProps = {
+    font: fontUrl,
+    size,
+    height,
+    curveSegments: 6,
+    bevelEnabled: true,
+    bevelThickness: 0.015,
+    bevelSize,
+    bevelSegments: 3,
+    letterSpacing,
+  };
+
   return (
     <group ref={groupRef} position={position}>
       <Center>
-        <Text3D
-          font={fontUrl}
-          size={size}
-          height={height}
-          curveSegments={6}
-          bevelEnabled
-          bevelThickness={0.015}
-          bevelSize={bevelSize}
-          bevelSegments={3}
-          letterSpacing={letterSpacing}
-        >
+        {/* Camada principal: vidro PBR */}
+        <Text3D {...text3dProps}>
           {children}
           <meshPhysicalMaterial
             ref={matRef}
@@ -129,6 +155,38 @@ export function GlitchText3D({
             opacity={1}
           />
         </Text3D>
+
+        {/* Ghost RED (chromatic aberration +X) */}
+        <group ref={ghostRedRef}>
+          <Text3D {...text3dProps}>
+            {children}
+            <meshBasicMaterial
+              ref={ghostRedMatRef}
+              color="#ff2030"
+              transparent
+              opacity={0}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </Text3D>
+        </group>
+
+        {/* Ghost CYAN (chromatic aberration -X) */}
+        <group ref={ghostCyanRef}>
+          <Text3D {...text3dProps}>
+            {children}
+            <meshBasicMaterial
+              ref={ghostCyanMatRef}
+              color="#00ffe5"
+              transparent
+              opacity={0}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </Text3D>
+        </group>
       </Center>
     </group>
   );

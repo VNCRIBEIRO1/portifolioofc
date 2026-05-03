@@ -22,7 +22,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { glitchClock } from "./glitch";
 import { useImmersive } from "./store";
-import { CrystalFragments } from "./CrystalFragments";
+import { CrystalShatter } from "./CrystalShatter";
 
 // GLBs fotorrealistas em public/models/crystals-real/<slug>.glb
 //   - cerbelera: Hunyuan3D-2 (PBR + WebP textures)
@@ -67,77 +67,77 @@ export const CRYSTALS: CrystalCase[] = [
   { slug: "cerbelera", title: "Cerbelera & Oliveira", nicho: "Juridico",
     mockup: "/images/projects/cerbelera-desktop.png",
     gemColor: "#1a1320", glowColor: "#ffb74a", accent: "#ffc674",
-    kind: "octa", size: 2.6, z: -90, offset: [-3.5, -3.4], rotY: 0.3,
+    kind: "octa", size: 2.6, z: -90, offset: [-3.5, 0.8], rotY: 0.3,
     realModel: true },
 
   // 2. Andresa — SAUDE :: GLB TripoSR fotorrealista
   { slug: "andresa", title: "Dra. Andresa Martin", nicho: "Saude",
     mockup: "/images/projects/andresa-desktop.png",
     gemColor: "#f8c5d4", glowColor: "#ff7aa8", accent: "#ffb6c8",
-    kind: "dodeca", size: 2.5, z: -104, offset: [3.2, -3.8], rotY: -0.4,
+    kind: "dodeca", size: 2.5, z: -104, offset: [3.2, -0.5], rotY: -0.4,
     realModel: true },
 
   // 3. Apex — SAAS B2B :: GLB TripoSR fotorrealista
   { slug: "apex", title: "Apex Analytics", nicho: "Landing SaaS B2B",
     mockup: "/images/cases/apex.png",
     gemColor: "#3da8ff", glowColor: "#00e5ff", accent: "#5ec8ff",
-    kind: "bipyramid", size: 2.7, z: -118, offset: [-2.8, -2.6], rotY: 0.5,
+    kind: "bipyramid", size: 2.7, z: -118, offset: [-2.8, 1.2], rotY: 0.5,
     realModel: true },
 
   // 4. Lumen — CRM :: GLB TripoSR fotorrealista
   { slug: "lumen", title: "Lumen CRM", nicho: "CRM Dashboard",
     mockup: "/images/cases/lumen.png",
     gemColor: "#2dd47a", glowColor: "#ffd54a", accent: "#7be8a8",
-    kind: "bipyramid", size: 2.8, z: -132, offset: [3.8, -3.2], rotY: -0.3,
+    kind: "bipyramid", size: 2.8, z: -132, offset: [3.8, 0.4], rotY: -0.3,
     realModel: true },
 
   // 5. Onda — APP iOS :: GLB TripoSR fotorrealista
   { slug: "onda", title: "Onda Banking", nicho: "App iOS",
     mockup: "/images/cases/onda.png",
     gemColor: "#5cc8ff", glowColor: "#a8f0ff", accent: "#7dd3fc",
-    kind: "icosa", size: 2.5, z: -146, offset: [-3.3, -3.9], rotY: 0.4,
+    kind: "icosa", size: 2.5, z: -146, offset: [-3.3, -0.8], rotY: 0.4,
     realModel: true },
 
   // 6. Pulse — APP Android :: GLB TripoSR fotorrealista
   { slug: "pulse", title: "Pulse Fit", nicho: "App Android",
     mockup: "/images/cases/pulse.png",
     gemColor: "#e63946", glowColor: "#ff8f6b", accent: "#ff6b8a",
-    kind: "octa", size: 2.6, z: -160, offset: [3.0, -2.8], rotY: -0.5,
+    kind: "octa", size: 2.6, z: -160, offset: [3.0, 1.0], rotY: -0.5,
     realModel: true },
 
   // 7. Atelier — E-COMMERCE :: GLB TripoSR fotorrealista
   { slug: "atelier", title: "Atelier", nicho: "E-commerce Moda",
     mockup: "/images/cases/atelier.png",
     gemColor: "#9d4edd", glowColor: "#e0aaff", accent: "#c77dff",
-    kind: "dodeca", size: 2.6, z: -174, offset: [-3.5, -3.6], rotY: 0.3,
+    kind: "dodeca", size: 2.6, z: -174, offset: [-3.5, 0.2], rotY: 0.3,
     realModel: true },
 
   // 8. Forge — ERP :: GLB TripoSR fotorrealista
   { slug: "forge", title: "Forge", nicho: "ERP / Admin",
     mockup: "/images/cases/forge.png",
     gemColor: "#ff9c1a", glowColor: "#ffe066", accent: "#ffb84a",
-    kind: "bipyramid", size: 2.7, z: -188, offset: [3.4, -4.0], rotY: -0.4,
+    kind: "bipyramid", size: 2.7, z: -188, offset: [3.4, -0.6], rotY: -0.4,
     realModel: true },
 
   // 9. Northwind — INSTITUCIONAL :: GLB TripoSR fotorrealista
   { slug: "northwind", title: "Northwind Capital", nicho: "Institucional Premium",
     mockup: "/images/cases/northwind.png",
     gemColor: "#1e40af", glowColor: "#60a5fa", accent: "#93c5fd",
-    kind: "octa", size: 2.7, z: -202, offset: [-2.9, -2.6], rotY: 0.5,
+    kind: "octa", size: 2.7, z: -202, offset: [-2.9, 1.0], rotY: 0.5,
     realModel: true },
 
   // 10. Kira — PORTFOLIO EDITORIAL :: GLB TripoSR fotorrealista
   { slug: "kira", title: "Kira Tanaka", nicho: "Portfolio Editorial",
     mockup: "/images/cases/kira.png",
     gemColor: "#f0aaff", glowColor: "#80ffea", accent: "#caf0f8",
-    kind: "icosa", size: 2.5, z: -216, offset: [3.1, -3.3], rotY: -0.3,
+    kind: "icosa", size: 2.5, z: -216, offset: [3.1, 0.5], rotY: -0.3,
     realModel: true },
 
   // 11. Scholae — EDUCACIONAL :: GLB TripoSR fotorrealista
   { slug: "scholae", title: "Scholae", nicho: "Educacional",
     mockup: "/images/cases/scholae.png",
     gemColor: "#06d6a0", glowColor: "#118ab2", accent: "#48cae4",
-    kind: "dodeca", size: 2.6, z: -230, offset: [-3.2, -3.8], rotY: 0.4,
+    kind: "dodeca", size: 2.6, z: -230, offset: [-3.2, -0.8], rotY: 0.4,
     realModel: true },
 ];
 
@@ -201,7 +201,6 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
   const realSceneGroupRef = useRef<THREE.Group>(null!);
   const shatterProgressRef = useRef(0);
   const shellMatRef = useRef<THREE.MeshPhysicalMaterial>(null!);
-  const haloRef = useRef<THREE.Mesh>(null!);
   const hologramGroupRef = useRef<THREE.Group>(null!);
   const hologramMatRef = useRef<THREE.ShaderMaterial>(null!);
   const hologramFrameMatRef = useRef<THREE.MeshBasicMaterial>(null!);
@@ -330,12 +329,7 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
     const eased = THREE.MathUtils.lerp(cur, targetScale, 0.12);
     groupRef.current.scale.setScalar(Math.max(0.001, eased));
 
-    // Halo torus
-    if (haloRef.current) {
-      const haloSpeed = (focused || dolly) ? 1.8 : 0.5;
-      haloRef.current.rotation.z = t * haloSpeed * 0.3;
-      haloRef.current.rotation.x = Math.PI / 2 + Math.sin(t * 0.3 + index) * 0.2;
-    }
+    // Halo torus removed
 
     // Shell: opacidade SOLIDA (cristal vivido), abre levemente no dolly
     if (shellMatRef.current) {
@@ -448,22 +442,11 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
       {/* 1. Faceted shell — vidro fisico facetado VIVIDO (procedural)
            OU scene fotorrealista Hunyuan3D-2 quando info.realModel */}
       {realModel && realScene ? (
-        <>
-          <group ref={realSceneGroupRef}>
-            <primitive
-              object={realScene}
-              scale={realScale}
-            />
-          </group>
-          <CrystalFragments
-            slug={info.slug}
-            size={info.size}
-            color={gemColor}
-            emissive={accentColor}
-            shellRef={realSceneGroupRef}
-            getProgress={() => shatterProgressRef.current}
-          />
-        </>
+        <CrystalShatter
+          scene={realScene}
+          scale={realScale}
+          getProgress={() => shatterProgressRef.current}
+        />
       ) : (
         <>
           <mesh ref={shellRef}>
@@ -549,19 +532,6 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
           color={glowColor}
           transparent
           opacity={1}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* 3. Halo torus orbitando */}
-      <mesh ref={haloRef} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[info.size * 1.55, 0.05, 8, 96]} />
-        <meshBasicMaterial
-          color={accentColor}
-          transparent
-          opacity={0.75}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
           toneMapped={false}
         />
       </mesh>

@@ -94,9 +94,10 @@ export function MoonTerrain() {
       const rid = ridges(nx * 0.85, ny * 0.85, 5) * 2.2;    // picos lunares
       const micro = (valueNoise2D(nx * 6, ny * 6) - 0.5) * 0.4; // pedrinhas
       let h = macro + meso + rid + micro;
-      // Vale rebaixado no centro (X≈0) para abrir caminho da camera entre
-      // os cristais — depressao gaussiana ao longo do eixo Z
-      const valley = Math.exp(-(x * x) / 90) * 1.6;
+      // Vale REBAIXADO E LARGO no centro (X≈0) para abrir caminho da
+      // camera ENTRE os cristais (que ficam em x ±3.5). O vale precisa
+      // cobrir essa regiao + extra. Gaussiana mais larga e mais profunda.
+      const valley = Math.exp(-(x * x) / 360) * 4.5;
       h -= valley;
       pos.setZ(i, h); // antes da rotacao, Z local = altura
       // Cor: gradiente vale→crista
@@ -129,7 +130,7 @@ export function MoonTerrain() {
     if (!meshRef.current) return;
     const t = state.clock.elapsedTime;
     // Sutil deslocamento Y para parallax visual
-    meshRef.current.position.y = -7.6 + Math.sin(t * 0.18) * 0.08;
+    meshRef.current.position.y = -10.5 + Math.sin(t * 0.18) * 0.08;
   });
 
   return (
@@ -141,7 +142,7 @@ export function MoonTerrain() {
         geometry={geometry}
         material={material}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -7.6, -135]}
+        position={[0, -10.5, -135]}
         receiveShadow
       />
       {/* Halo atmosferico cinza — esfera grande envolvendo a cena
