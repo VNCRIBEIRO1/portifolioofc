@@ -48,35 +48,47 @@ export function GlitchText3D({
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
-    // Idle micro-movimento (respiração)
-    groupRef.current.rotation.y = Math.sin(t * 0.25) * 0.04;
-    groupRef.current.position.y = position[1] + Math.sin(t * 0.6) * 0.04;
+    const phase = position[0] + position[1]; // offset por instancia
 
-    // Glitch V4: jitter de posicao X + scale Y + flash emissive + skew leve
+    // === KINETIC TYPOGRAPHY: deformacao continua sempre-on ===
+    // Micro-jitter X sustentado (multi-frequencia, parece variavel font axis)
+    const xJ = Math.sin(t * 3.1 + phase) * 0.022 + Math.sin(t * 9.7 + phase) * 0.011;
+    // Scale Y pulsante (peso variavel)
+    const sY = 1 + Math.sin(t * 4.7) * 0.04 + Math.sin(t * 11.3 + phase) * 0.018;
+    // Scale X pulsante (largura variavel)
+    const sX = 1 + Math.sin(t * 5.3 + 0.7) * 0.022 + Math.sin(t * 8.1) * 0.012;
+    // Rotacao Z oscilante leve (italic axis)
+    const rZ = Math.sin(t * 1.7 + phase) * 0.012 + (Math.random() - 0.5) * 0.004;
+    // Idle respiration overlay
+    const yBob = Math.sin(t * 0.6) * 0.04;
+
+    groupRef.current.rotation.y = Math.sin(t * 0.25) * 0.04;
+    groupRef.current.position.x = position[0] + xJ;
+    groupRef.current.position.y = position[1] + yBob;
+    groupRef.current.scale.y = sY;
+    groupRef.current.scale.x = sX;
+    groupRef.current.rotation.z = rZ;
+
+    // Emissive pulse continuo
+    let emissive = 0.35 + 0.25 * Math.abs(Math.sin(t * 2.1 + phase));
+
+    // Glitch SPIKE (bursts de glitchClock) acumula em cima do continuo
     if (glitch > 0.01) {
-      groupRef.current.position.x = position[0] + (Math.random() - 0.5) * glitch * 0.45;
-      groupRef.current.scale.y = 1 + (Math.random() - 0.5) * glitch * 0.18;
-      groupRef.current.scale.x = 1 + (Math.random() - 0.5) * glitch * 0.06;
-      groupRef.current.rotation.z = (Math.random() - 0.5) * glitch * 0.04;
-      if (matRef.current) {
-        matRef.current.emissiveIntensity = 0.35 + glitch * 1.3;
-      }
-    } else {
-      groupRef.current.position.x = position[0];
-      groupRef.current.scale.y = 1;
-      groupRef.current.scale.x = 1;
-      groupRef.current.rotation.z = 0;
-      if (matRef.current) {
-        matRef.current.emissiveIntensity = 0.35;
-      }
+      groupRef.current.position.x += (Math.random() - 0.5) * glitch * 0.45;
+      groupRef.current.scale.y *= 1 + (Math.random() - 0.5) * glitch * 0.18;
+      groupRef.current.scale.x *= 1 + (Math.random() - 0.5) * glitch * 0.06;
+      groupRef.current.rotation.z += (Math.random() - 0.5) * glitch * 0.04;
+      emissive += glitch * 1.1;
+    }
+
+    if (matRef.current) {
+      matRef.current.emissiveIntensity = emissive;
     }
 
     // Visibilidade por Z da câmera
     if (zStart !== undefined && zEnd !== undefined) {
       const camZ = state.camera.position.z;
-      // fadeIn: 1 quando camera está em zStart, 0 quando mais longe que zStart+18
       const fadeIn = 1 - THREE.MathUtils.smoothstep(camZ, zStart, zStart + 18);
-      // fadeOut: 1 enquanto camera não passou de zEnd, 0 quando passou (camZ < zEnd-8)
       const fadeOut = THREE.MathUtils.smoothstep(camZ, zEnd - 8, zEnd);
       const vis = fadeIn * fadeOut;
       if (matRef.current) {

@@ -10,6 +10,7 @@ import { Hero3DText } from "./Hero3DText";
 import { Post } from "./Post";
 import { ScrollCamera } from "./ScrollCamera";
 import { Cosmos } from "./Cosmos";
+import { MoonTerrain } from "./MoonTerrain";
 import { BlackHole } from "./BlackHole";
 import { SpeedStreaks } from "./Streaks";
 import { useImmersive } from "./store";
@@ -64,6 +65,7 @@ export function Scene() {
           <Environment preset="night" background={false} environmentIntensity={0.4} />
           {/* AMBIENTE COSMICO */}
           <Cosmos />
+          <MoonTerrain />
           <BlackHole />
           {!reducedMotion && <SpeedStreaks />}
           {/* CONTEUDO */}

@@ -22,6 +22,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { glitchClock } from "./glitch";
 import { useImmersive } from "./store";
+import { CrystalFragments } from "./CrystalFragments";
 
 // GLBs fotorrealistas em public/models/crystals-real/<slug>.glb
 //   - cerbelera: Hunyuan3D-2 (PBR + WebP textures)
@@ -38,7 +39,7 @@ export type CrystalCase = {
   slug: string;
   title: string;
   nicho: string;
-  mockup: string | null;
+  mockup: string;
   /** Cor primaria do cristal (gem) */
   gemColor: string;
   /** Cor de luz interna complementar (glow) */
@@ -66,120 +67,79 @@ export const CRYSTALS: CrystalCase[] = [
   { slug: "cerbelera", title: "Cerbelera & Oliveira", nicho: "Juridico",
     mockup: "/images/projects/cerbelera-desktop.png",
     gemColor: "#1a1320", glowColor: "#ffb74a", accent: "#ffc674",
-    kind: "octa", size: 2.6, z: -90, offset: [-3.5, 0.8], rotY: 0.3,
+    kind: "octa", size: 2.6, z: -90, offset: [-3.5, -3.4], rotY: 0.3,
     realModel: true },
 
   // 2. Andresa — SAUDE :: GLB TripoSR fotorrealista
   { slug: "andresa", title: "Dra. Andresa Martin", nicho: "Saude",
     mockup: "/images/projects/andresa-desktop.png",
     gemColor: "#f8c5d4", glowColor: "#ff7aa8", accent: "#ffb6c8",
-    kind: "dodeca", size: 2.5, z: -104, offset: [3.2, -0.5], rotY: -0.4,
+    kind: "dodeca", size: 2.5, z: -104, offset: [3.2, -3.8], rotY: -0.4,
     realModel: true },
 
   // 3. Apex — SAAS B2B :: GLB TripoSR fotorrealista
   { slug: "apex", title: "Apex Analytics", nicho: "Landing SaaS B2B",
     mockup: "/images/cases/apex.png",
     gemColor: "#3da8ff", glowColor: "#00e5ff", accent: "#5ec8ff",
-    kind: "bipyramid", size: 2.7, z: -118, offset: [-2.8, 1.2], rotY: 0.5,
+    kind: "bipyramid", size: 2.7, z: -118, offset: [-2.8, -2.6], rotY: 0.5,
     realModel: true },
 
   // 4. Lumen — CRM :: GLB TripoSR fotorrealista
   { slug: "lumen", title: "Lumen CRM", nicho: "CRM Dashboard",
     mockup: "/images/cases/lumen.png",
     gemColor: "#2dd47a", glowColor: "#ffd54a", accent: "#7be8a8",
-    kind: "bipyramid", size: 2.8, z: -132, offset: [3.8, 0.4], rotY: -0.3,
+    kind: "bipyramid", size: 2.8, z: -132, offset: [3.8, -3.2], rotY: -0.3,
     realModel: true },
 
   // 5. Onda — APP iOS :: GLB TripoSR fotorrealista
   { slug: "onda", title: "Onda Banking", nicho: "App iOS",
     mockup: "/images/cases/onda.png",
     gemColor: "#5cc8ff", glowColor: "#a8f0ff", accent: "#7dd3fc",
-    kind: "icosa", size: 2.5, z: -146, offset: [-3.3, -0.8], rotY: 0.4,
+    kind: "icosa", size: 2.5, z: -146, offset: [-3.3, -3.9], rotY: 0.4,
     realModel: true },
 
   // 6. Pulse — APP Android :: GLB TripoSR fotorrealista
   { slug: "pulse", title: "Pulse Fit", nicho: "App Android",
     mockup: "/images/cases/pulse.png",
     gemColor: "#e63946", glowColor: "#ff8f6b", accent: "#ff6b8a",
-    kind: "octa", size: 2.6, z: -160, offset: [3.0, 1.0], rotY: -0.5,
+    kind: "octa", size: 2.6, z: -160, offset: [3.0, -2.8], rotY: -0.5,
     realModel: true },
 
   // 7. Atelier — E-COMMERCE :: GLB TripoSR fotorrealista
   { slug: "atelier", title: "Atelier", nicho: "E-commerce Moda",
     mockup: "/images/cases/atelier.png",
     gemColor: "#9d4edd", glowColor: "#e0aaff", accent: "#c77dff",
-    kind: "dodeca", size: 2.6, z: -174, offset: [-3.5, 0.2], rotY: 0.3,
+    kind: "dodeca", size: 2.6, z: -174, offset: [-3.5, -3.6], rotY: 0.3,
     realModel: true },
 
   // 8. Forge — ERP :: GLB TripoSR fotorrealista
   { slug: "forge", title: "Forge", nicho: "ERP / Admin",
     mockup: "/images/cases/forge.png",
     gemColor: "#ff9c1a", glowColor: "#ffe066", accent: "#ffb84a",
-    kind: "bipyramid", size: 2.7, z: -188, offset: [3.4, -0.6], rotY: -0.4,
+    kind: "bipyramid", size: 2.7, z: -188, offset: [3.4, -4.0], rotY: -0.4,
     realModel: true },
 
   // 9. Northwind — INSTITUCIONAL :: GLB TripoSR fotorrealista
   { slug: "northwind", title: "Northwind Capital", nicho: "Institucional Premium",
     mockup: "/images/cases/northwind.png",
     gemColor: "#1e40af", glowColor: "#60a5fa", accent: "#93c5fd",
-    kind: "octa", size: 2.7, z: -202, offset: [-2.9, 1.0], rotY: 0.5,
+    kind: "octa", size: 2.7, z: -202, offset: [-2.9, -2.6], rotY: 0.5,
     realModel: true },
 
   // 10. Kira — PORTFOLIO EDITORIAL :: GLB TripoSR fotorrealista
   { slug: "kira", title: "Kira Tanaka", nicho: "Portfolio Editorial",
     mockup: "/images/cases/kira.png",
     gemColor: "#f0aaff", glowColor: "#80ffea", accent: "#caf0f8",
-    kind: "icosa", size: 2.5, z: -216, offset: [3.1, 0.5], rotY: -0.3,
+    kind: "icosa", size: 2.5, z: -216, offset: [3.1, -3.3], rotY: -0.3,
     realModel: true },
 
   // 11. Scholae — EDUCACIONAL :: GLB TripoSR fotorrealista
   { slug: "scholae", title: "Scholae", nicho: "Educacional",
     mockup: "/images/cases/scholae.png",
     gemColor: "#06d6a0", glowColor: "#118ab2", accent: "#48cae4",
-    kind: "dodeca", size: 2.6, z: -230, offset: [-3.2, -0.8], rotY: 0.4,
+    kind: "dodeca", size: 2.6, z: -230, offset: [-3.2, -3.8], rotY: 0.4,
     realModel: true },
 ];
-
-/** Placeholder canvas texture (caso o mockup nao exista ainda). */
-function makePlaceholderTexture(c: CrystalCase): THREE.Texture {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 640;
-  const ctx = canvas.getContext("2d")!;
-  const grad = ctx.createLinearGradient(0, 0, 0, 640);
-  grad.addColorStop(0, "#0c0c20");
-  grad.addColorStop(0.5, c.gemColor + "33");
-  grad.addColorStop(1, "#03030c");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1024, 640);
-  ctx.strokeStyle = "rgba(232,232,240,0.06)";
-  ctx.lineWidth = 1;
-  for (let x = 0; x <= 1024; x += 48) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 640); ctx.stroke();
-  }
-  for (let y = 0; y <= 640; y += 48) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1024, y); ctx.stroke();
-  }
-  ctx.fillStyle = "rgba(155,163,196,0.7)";
-  ctx.font = "20px 'Courier New', monospace";
-  ctx.fillText(`> CASE_${c.slug.toUpperCase()}`, 48, 60);
-  ctx.fillText(`> ${c.nicho.toUpperCase()}`, 48, 90);
-  ctx.fillStyle = "#e8e8f0";
-  ctx.font = "700 78px Inter, sans-serif";
-  ctx.fillText(c.title, 48, 320);
-  ctx.fillStyle = c.accent;
-  ctx.fillRect(48, 360, 120, 2);
-  ctx.fillStyle = "rgba(232,232,240,0.6)";
-  ctx.font = "24px Inter, sans-serif";
-  ctx.fillText("Mockup PNG", 48, 410);
-  ctx.fillStyle = "rgba(197,205,232,0.08)";
-  ctx.font = "900 240px Inter, sans-serif";
-  ctx.fillText(c.slug.charAt(0).toUpperCase(), 720, 540);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.needsUpdate = true;
-  return tex;
-}
 
 /** Bipiramide alongada (cristal estilo cuarzo) — combina dois cones espelhados. */
 function makeBipyramidGeometry(radius = 1.4, height = 3.0, segments = 6): THREE.BufferGeometry {
@@ -238,6 +198,8 @@ export function CrystalShowcase() {
 function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
   const groupRef = useRef<THREE.Group>(null!);
   const shellRef = useRef<THREE.Mesh>(null!);
+  const realSceneGroupRef = useRef<THREE.Group>(null!);
+  const shatterProgressRef = useRef(0);
   const shellMatRef = useRef<THREE.MeshPhysicalMaterial>(null!);
   const haloRef = useRef<THREE.Mesh>(null!);
   const hologramGroupRef = useRef<THREE.Group>(null!);
@@ -340,6 +302,12 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
     const focused = useImmersive.getState().focusedCrystal === index;
     const dolly = useImmersive.getState().dollyTarget === index;
     const opened = useImmersive.getState().openedCrystal === index;
+
+    // Shatter progress (0 = solido, 1 = totalmente despedacado)
+    const shatterTarget = (focused || dolly || opened) ? 1 : 0;
+    shatterProgressRef.current = THREE.MathUtils.lerp(
+      shatterProgressRef.current, shatterTarget, 0.08
+    );
 
     // Rotacao: SUSPENSA durante hover/dolly/opened para legibilidade
     if (dolly || focused || opened) {
@@ -480,10 +448,22 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
       {/* 1. Faceted shell — vidro fisico facetado VIVIDO (procedural)
            OU scene fotorrealista Hunyuan3D-2 quando info.realModel */}
       {realModel && realScene ? (
-        <primitive
-          object={realScene}
-          scale={realScale}
-        />
+        <>
+          <group ref={realSceneGroupRef}>
+            <primitive
+              object={realScene}
+              scale={realScale}
+            />
+          </group>
+          <CrystalFragments
+            slug={info.slug}
+            size={info.size}
+            color={gemColor}
+            emissive={accentColor}
+            shellRef={realSceneGroupRef}
+            getProgress={() => shatterProgressRef.current}
+          />
+        </>
       ) : (
         <>
           <mesh ref={shellRef}>
@@ -727,12 +707,9 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
 }
 
 function useMockupTexture(info: CrystalCase): THREE.Texture {
-  const real = useTexture(info.mockup ? [info.mockup] : []);
-  const placeholder = useMemo(() => makePlaceholderTexture(info), [info]);
-  if (info.mockup && Array.isArray(real) && real.length > 0) {
-    const t = real[0] as THREE.Texture;
-    t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  }
-  return placeholder;
+  // Todos os 11 cristais tem mockup PNG real — nao ha caminho fallback.
+  const arr = useTexture([info.mockup as string]);
+  const t = (Array.isArray(arr) ? arr[0] : arr) as THREE.Texture;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
 }
