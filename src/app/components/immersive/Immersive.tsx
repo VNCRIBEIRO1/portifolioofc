@@ -26,7 +26,11 @@ export function Immersive() {
   // Detect device capability ANTES de decidir montar canvas
   useEffect(() => {
     const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // V4: gate só pelo essencial — prefers-reduced-motion + WebGL real
+    // V4.1: gate ULTRA permissivo — so cai para static se WebGL realmente nao existe.
+    // prefers-reduced-motion apenas seta a flag (Scene reduz particulas/post),
+    // NAO troca de modo. Hardware fraco (cores<2 OU mem<1) tambem mantem
+    // imersivo mas reduzido. Em produção isso evita "PixelCode Studio estatico"
+    // em Windows 11 com animacoes reduzidas no SO.
     const hasWebGL = (() => {
       try {
         const c = document.createElement("canvas");
@@ -38,12 +42,11 @@ export function Immersive() {
     })();
     const cores = navigator.hardwareConcurrency || 4;
     const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
-    // Reduzido apenas se: usuário pediu, WebGL ausente, OU equipamento muito fraco
-    // (cores<2 OU memoria<2). Mobile NÃO força mais static — recebe versao otimizada.
-    const veryLow = cores < 2 || mem < 2;
-    const reduce = mqMotion.matches || !hasWebGL || veryLow;
-    setReducedMotion(reduce);
-    setMode(reduce ? "static" : "immersive");
+    // Reducao de movimento NAO bloqueia mais o imersivo — apenas reduz particulas
+    const veryLow = cores < 2 || mem < 1;
+    setReducedMotion(mqMotion.matches || veryLow);
+    // Static APENAS quando WebGL ausente (browser muito antigo / desktops sem GPU)
+    setMode(!hasWebGL ? "static" : "immersive");
   }, [setReducedMotion]);
 
   // Defer canvas mount to idle
