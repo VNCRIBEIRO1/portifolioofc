@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Preload } from "@react-three/drei";
+import { Preload, Environment } from "@react-three/drei";
 import { Suspense, useEffect } from "react";
 import * as THREE from "three";
 import { CrystalShowcase } from "./CrystalShowcase";
@@ -60,6 +60,8 @@ export function Scene() {
 
         <Suspense fallback={null}>
           <ScrollCamera />
+          {/* HDRI envmap "night" — reflexões realistas em vidro/cristal */}
+          <Environment preset="night" background={false} environmentIntensity={0.4} />
           {/* AMBIENTE COSMICO */}
           <Cosmos />
           <BlackHole />

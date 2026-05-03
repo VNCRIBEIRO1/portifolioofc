@@ -415,20 +415,52 @@ function Holocrystal({ info, index }: { info: CrystalCase; index: number }) {
           color={gemColor}
           emissive={gemColor}
           emissiveIntensity={0.35}
-          roughness={0.08}
-          metalness={0.25}
-          transmission={0.55}
-          thickness={1.2}
-          ior={1.7}
+          roughness={0.06}
+          metalness={0.15}
+          transmission={0.7}
+          thickness={1.6}
+          ior={1.85}
           clearcoat={1}
-          clearcoatRoughness={0.05}
+          clearcoatRoughness={0.04}
           attenuationColor={glowColor}
-          attenuationDistance={1.5}
+          attenuationDistance={1.6}
+          iridescence={0.6}
+          iridescenceIOR={1.6}
+          iridescenceThicknessRange={[100, 600]}
+          sheen={0.5}
+          sheenColor={accentColor}
+          sheenRoughness={0.4}
           flatShading
           transparent
-          opacity={0.94}
+          opacity={0.92}
           side={THREE.DoubleSide}
-          envMapIntensity={1.4}
+          envMapIntensity={2.2}
+        />
+      </mesh>
+
+      {/* 1c. Camada interna de facetas — geometria nested para profundidade */}
+      <mesh scale={0.62} rotation={[0.6, 0.4, 0.2]}>
+        {info.kind === "octa" ? (
+          <octahedronGeometry args={[info.size, 0]} />
+        ) : info.kind === "dodeca" ? (
+          <icosahedronGeometry args={[info.size * 0.95, 0]} />
+        ) : (
+          <octahedronGeometry args={[info.size * 0.9, 0]} />
+        )}
+        <meshPhysicalMaterial
+          color={glowColor}
+          emissive={glowColor}
+          emissiveIntensity={0.6}
+          roughness={0.1}
+          metalness={0.3}
+          transmission={0.4}
+          thickness={0.8}
+          ior={1.9}
+          flatShading
+          transparent
+          opacity={0.55}
+          side={THREE.DoubleSide}
+          envMapIntensity={1.5}
         />
       </mesh>
 
