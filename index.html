@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PixelCode Studio</title>
+  <meta name="description" content="Design digital premium e engenharia front-end por Vinícius Ribeiro." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Usando Clash Display (simulada via Syne/Inter) e JetBrains Mono para o ar brutalista -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body class="loading">
+  <!-- LOADING COMMAND PANEL -->
+  <div class="loader" role="status" aria-live="polite">
+    <div class="loader__panel">
+      <div class="loader__scanline"></div>
+      <div class="loader__label">ORBITAL BOOT PANEL</div>
+      <div class="loader__counter">0%</div>
+      <div class="loader__bar" aria-hidden="true">
+        <div class="loader__bar-fill"></div>
+      </div>
+      <div class="loader__telemetry">SINCRONIZANDO PAINEL ORBITAL</div>
+      <div class="loader__grid">
+        <span>MEMORY</span>
+        <span>SHADER</span>
+        <span>GSAP</span>
+        <span>MATRIX</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOISE -->
+  <div class="noise" aria-hidden="true"></div>
+  <div class="tv-frame"></div>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor">
+    <div class="cursor__text"></div>
+  </div>
+
+  <!-- WEBGL CANVAS (For Portfolio Shaders) -->
+  <div class="webgl-container">
+    <canvas id="webgl-canvas"></canvas>
+  </div>
+
+  <!-- EDGE NAVIGATION ARROWS (corners) -->
+  <button id="prev-btn" class="edge-nav edge-nav--prev" data-cursor-text="VOLTAR" aria-label="Slide anterior" disabled>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6 L9 12 L15 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button id="next-btn" class="edge-nav edge-nav--next" data-cursor-text="AVANÇAR" aria-label="Próximo slide">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 L15 12 L9 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="slide-counter" id="slide-nav" aria-hidden="true">
+    <span id="nav-current">01</span> <em>/</em> <span id="nav-total">06</span>
+  </div>
+  <button id="play-pause-btn" hidden aria-hidden="true" style="display:none"></button>
+
+  <!-- FLOATING MAGNETIC PILL NAV -->
+
+  <main id="smooth-wrapper">
+    <!-- HERO -->
+    <section class="hero" id="hero" data-slide="0">
+      <div class="hero__wrapper">
+        <h1 class="hero__title glitch-wrapper">
+          <span class="hero__title-line glitch-text" data-text="PIXELCODE" data-scroll-speed="1.2">PIXELCODE</span>
+          <span class="hero__title-line outline" data-scroll-speed="0.8">STUDIO</span>
+        </h1>
+        <div class="hero__copy hero__copy--centered">
+          <p id="hero-dynamic-text" class="hero__desc matrix-reveal" data-text="NÃO CONSTRUÍMOS APENAS SITES.">NÃO CONSTRUÍMOS APENAS SITES.</p>
+        </div>
+        <div class="hero__actions" style="margin-top: 2rem; opacity: 0; pointer-events: none;">
+          <button id="continue-to-arsenal" class="btn-continue">CONTINUE</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENTO GRID CARDS (Holo-Cards) -->
+    <section class="bento section-safe" data-slide="1">
+      <div class="section-header section-header--left">
+        <h2 class="section-title matrix-reveal">ARSENAL TÉCNICO</h2>
+        <p class="section-subtitle matrix-reveal">A engenharia por trás do design.</p>
+      </div>
+      
+      <div class="bento__grid">
+        <!-- Card 1: Web Elite — Terminal sobre mockup hero -->
+        <article class="bento-card bento-card--with-bg">
+          <div class="bento-card__inner">
+            <div class="bento-card__bg" style="background-image: url('/screen-3d-2.jpg');" aria-hidden="true"></div>
+            <div class="bento-card__bg-grid" aria-hidden="true"></div>
+            <div class="bento-card__terminal" aria-hidden="true">
+              <div class="bento-card__terminal-bar">
+                <span></span><span></span><span></span>
+                <em>~/pixelcode/app.tsx</em>
+              </div>
+              <div class="bento-card__terminal-body">
+                <span class="t-line"><em>const</em> <b>app</b> = <em>next</em>(<i>{ ssr: true, ai: true }</i>);</span>
+                <span class="t-line"><em>export</em> <em>default</em> <b>function</b> <i>Elite</i>() {</span>
+                <span class="t-line">&nbsp;&nbsp;<em>return</em> &lt;<b>Performance</b> seo ux ai /&gt;;</span>
+                <span class="t-line">}</span>
+                <span class="t-line">// PageSpeed 100 · LCP 1.1s · ROI ↑<span class="t-cursor"></span></span>
+              </div>
+            </div>
+            <ul class="bento-card__pills" aria-hidden="true">
+              <li>PERFORMANCE 100</li>
+              <li>SEO TÉCNICO</li>
+              <li>UX/UI PREMIUM</li>
+              <li>SEGURANÇA &amp; AI</li>
+            </ul>
+            <div class="bento-card__spotlight"></div>
+            <div class="hud-corners"></div>
+            <div class="bento-card__content">
+              <span class="bento-card__tag"><span class="pulse-dot"></span> [ SYS: CORE ]</span>
+              <h3 class="hover-bug">DESENVOLVIMENTO<br/>WEB ELITE</h3>
+              <p class="matrix-reveal">Plataformas com PageSpeed 100, SEO técnico, UX premium e AI integrada.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: 3D Experiences — único com magnetic-grid -->
+        <article class="bento-card">
+          <div class="bento-card__inner">
+            <canvas class="magnetic-grid"></canvas>
+            <div class="bento-card__spotlight"></div>
+            <div class="hud-corners"></div>
+            <div class="bento-card__content">
+              <span class="bento-card__tag"><span class="pulse-dot"></span> [ SYS: WEBGL ]</span>
+              <h3 class="hover-bug">EXPERIÊNCIAS 3D</h3>
+              <p class="matrix-reveal">Imersão total com Three.js.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3: AI/LLM — Fluxograma n8n-style sobre mockup -->
+        <article class="bento-card bento-card--with-bg">
+          <div class="bento-card__inner">
+            <div class="bento-card__bg" style="background-image: url('/llm-elite-integracoes.jpg');" aria-hidden="true"></div>
+            <div class="bento-card__bg-grid" aria-hidden="true"></div>
+            <svg class="bento-card__flow" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#00E5FF"/>
+                </marker>
+              </defs>
+              <path class="flow-link" d="M30,30 H80" stroke="#00E5FF" stroke-width="1" fill="none" marker-end="url(#flow-arrow)"/>
+              <path class="flow-link" d="M30,90 H80" stroke="#00E5FF" stroke-width="1" fill="none" marker-end="url(#flow-arrow)"/>
+              <path class="flow-link" d="M115,30 C140,30 140,60 165,60" stroke="#00E5FF" stroke-width="1" fill="none" marker-end="url(#flow-arrow)"/>
+              <path class="flow-link" d="M115,90 C140,90 140,60 165,60" stroke="#00E5FF" stroke-width="1" fill="none" marker-end="url(#flow-arrow)"/>
+              <g class="flow-node">
+                <rect x="6" y="22" width="24" height="16" rx="3" fill="rgba(0,229,255,0.12)" stroke="#00E5FF" stroke-width="0.8"/>
+                <text x="18" y="33" text-anchor="middle" fill="#00E5FF" font-size="6" font-family="monospace">INPUT</text>
+              </g>
+              <g class="flow-node">
+                <rect x="6" y="82" width="24" height="16" rx="3" fill="rgba(0,229,255,0.12)" stroke="#00E5FF" stroke-width="0.8"/>
+                <text x="18" y="93" text-anchor="middle" fill="#00E5FF" font-size="6" font-family="monospace">DOCS</text>
+              </g>
+              <g class="flow-node flow-node--mid">
+                <rect x="80" y="20" width="36" height="20" rx="3" fill="rgba(0,229,255,0.18)" stroke="#00E5FF" stroke-width="1"/>
+                <text x="98" y="33" text-anchor="middle" fill="#fff" font-size="6" font-family="monospace">GEMINI</text>
+              </g>
+              <g class="flow-node flow-node--mid">
+                <rect x="80" y="80" width="36" height="20" rx="3" fill="rgba(0,229,255,0.18)" stroke="#00E5FF" stroke-width="1"/>
+                <text x="98" y="93" text-anchor="middle" fill="#fff" font-size="6" font-family="monospace">OPENAI</text>
+              </g>
+              <g class="flow-node flow-node--out">
+                <rect x="165" y="50" width="28" height="20" rx="3" fill="rgba(0,229,255,0.25)" stroke="#00E5FF" stroke-width="1"/>
+                <text x="179" y="63" text-anchor="middle" fill="#fff" font-size="6" font-family="monospace">OUT</text>
+              </g>
+            </svg>
+            <div class="bento-card__spotlight"></div>
+            <div class="hud-corners"></div>
+            <div class="bento-card__content">
+              <span class="bento-card__tag"><span class="pulse-dot"></span> [ SYS: AI_DEV ]</span>
+              <h3 class="hover-bug">INTEGRAÇÃO LLM</h3>
+              <p class="matrix-reveal">RAG + fine-tuning. Concierge virtual, BI conversacional, KB interno seguro.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4: Sistemas & Mobile — wireframe phone + CRM dashboard -->
+        <article class="bento-card">
+          <div class="bento-card__inner">
+            <svg class="bento-card__crm" viewBox="0 0 180 110" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+              <rect class="crm-frame" x="3" y="6" width="174" height="100" rx="3" stroke="#00E5FF" stroke-width="0.8" fill="none"/>
+              <line class="crm-divider" x1="3" y1="16" x2="177" y2="16" stroke="#00E5FF" stroke-width="0.5"/>
+              <circle class="crm-dot" cx="8" cy="11" r="1.2" fill="#00E5FF"/>
+              <circle class="crm-dot" cx="13" cy="11" r="1.2" fill="#00E5FF" opacity="0.7"/>
+              <circle class="crm-dot" cx="18" cy="11" r="1.2" fill="#00E5FF" opacity="0.5"/>
+              <text class="crm-title" x="160" y="13" font-size="4" font-family="monospace" fill="#00E5FF" text-anchor="end">CRM · ADMIN</text>
+              <rect class="crm-side" x="6" y="20" width="38" height="83" stroke="#00E5FF" stroke-width="0.5" fill="rgba(0,229,255,0.04)"/>
+              <rect class="crm-side-item" x="9" y="24" width="32" height="6" stroke="#00E5FF" stroke-width="0.4" fill="rgba(0,229,255,0.15)"/>
+              <rect class="crm-side-item" x="9" y="33" width="32" height="6" stroke="#00E5FF" stroke-width="0.4" fill="none"/>
+              <rect class="crm-side-item" x="9" y="42" width="32" height="6" stroke="#00E5FF" stroke-width="0.4" fill="none"/>
+              <rect class="crm-side-item" x="9" y="51" width="32" height="6" stroke="#00E5FF" stroke-width="0.4" fill="none"/>
+              <rect class="crm-side-item" x="9" y="60" width="32" height="6" stroke="#00E5FF" stroke-width="0.4" fill="none"/>
+              <rect class="crm-card" x="48" y="20" width="40" height="20" stroke="#00E5FF" stroke-width="0.5" fill="none"/>
+              <text x="68" y="32" font-size="6" font-family="monospace" fill="#00E5FF" text-anchor="middle" font-weight="bold">2.4k</text>
+              <rect class="crm-card" x="92" y="20" width="40" height="20" stroke="#00E5FF" stroke-width="0.5" fill="none"/>
+              <text x="112" y="32" font-size="5" font-family="monospace" fill="#00E5FF" text-anchor="middle">+18%</text>
+              <rect class="crm-card" x="136" y="20" width="38" height="20" stroke="#00E5FF" stroke-width="0.5" fill="none"/>
+              <polyline class="crm-spark" points="138,36 144,32 150,34 156,28 162,30 168,24 172,26" stroke="#00E5FF" stroke-width="0.6" fill="none"/>
+              <rect class="crm-chart" x="48" y="44" width="86" height="59" stroke="#00E5FF" stroke-width="0.5" fill="none"/>
+              <polyline class="crm-line" points="52,98 60,90 68,92 76,82 84,84 92,72 100,76 108,64 116,68 124,56 132,58" stroke="#00E5FF" stroke-width="0.7" fill="none"/>
+              <line x1="52" y1="100" x2="132" y2="100" stroke="#00E5FF" stroke-width="0.3" opacity="0.4"/>
+              <rect class="crm-table" x="138" y="44" width="36" height="59" stroke="#00E5FF" stroke-width="0.5" fill="none"/>
+              <line x1="138" y1="52" x2="174" y2="52" stroke="#00E5FF" stroke-width="0.3" opacity="0.5"/>
+              <line x1="138" y1="60" x2="174" y2="60" stroke="#00E5FF" stroke-width="0.3" opacity="0.5"/>
+              <line x1="138" y1="68" x2="174" y2="68" stroke="#00E5FF" stroke-width="0.3" opacity="0.5"/>
+              <line x1="138" y1="76" x2="174" y2="76" stroke="#00E5FF" stroke-width="0.3" opacity="0.5"/>
+              <line x1="138" y1="84" x2="174" y2="84" stroke="#00E5FF" stroke-width="0.3" opacity="0.5"/>
+              <line x1="138" y1="92" x2="174" y2="92" stroke="#00E5FF" stroke-width="0.3" opacity="0.5"/>
+              <circle class="crm-pulse" cx="48" cy="20" r="1.5" fill="#00E5FF"/>
+            </svg>
+            <svg class="bento-card__phone" viewBox="0 0 100 160" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+              <rect class="phone-frame" x="20" y="8" width="60" height="144" rx="10" ry="10" fill="none" stroke="#00E5FF" stroke-width="1.2"/>
+              <rect class="phone-screen" x="24" y="14" width="52" height="125" rx="3" fill="none" stroke="#00E5FF" stroke-width="0.6"/>
+              <line class="phone-notch" x1="42" y1="11" x2="58" y2="11" stroke="#00E5FF" stroke-width="1.2" stroke-linecap="round"/>
+              <circle class="phone-home" cx="50" cy="146" r="2" fill="none" stroke="#00E5FF" stroke-width="0.8"/>
+              <rect class="phone-block phone-block--1" x="28" y="20" width="44" height="14" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <rect class="phone-block phone-block--2" x="28" y="38" width="20" height="20" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <rect class="phone-block phone-block--3" x="52" y="38" width="20" height="20" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <rect class="phone-block phone-block--4" x="28" y="62" width="44" height="8" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <rect class="phone-block phone-block--5" x="28" y="74" width="44" height="8" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <rect class="phone-block phone-block--6" x="28" y="86" width="44" height="20" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <rect class="phone-block phone-block--7" x="28" y="110" width="44" height="24" fill="none" stroke="#00E5FF" stroke-width="0.5"/>
+              <line class="phone-scan" x1="24" y1="14" x2="76" y2="14" stroke="#00E5FF" stroke-width="0.6" opacity="0"/>
+            </svg>
+            <div class="bento-card__spotlight"></div>
+            <div class="hud-corners"></div>
+            <div class="bento-card__content">
+              <span class="bento-card__tag"><span class="pulse-dot"></span> [ SYS: ENTERPRISE ]</span>
+              <h3 class="hover-bug">SISTEMAS<br/>&amp; MOBILE</h3>
+              <p class="matrix-reveal">App, CRM, dashboard ou plataforma. Arquitetura escalável + AI integrada.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5: Landing Pages — mockup advocacia -->
+        <article class="bento-card bento-card--with-bg">
+          <div class="bento-card__inner">
+            <div class="bento-card__bg" style="background-image: url('/screen-advocacia.jpg'); background-position: 50% 8%;" aria-hidden="true"></div>
+            <div class="bento-card__bg-grid" aria-hidden="true"></div>
+            <div class="bento-card__scan-line" aria-hidden="true"></div>
+            <div class="bento-card__spotlight"></div>
+            <div class="hud-corners"></div>
+            <div class="bento-card__content">
+              <span class="bento-card__tag"><span class="pulse-dot"></span> [ SYS: CONVERSION ]</span>
+              <h3 class="hover-bug">LANDING PAGES</h3>
+              <p class="matrix-reveal">Premium high-end com Three.js + GSAP. Foco absoluto em conversão.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- MARQUEE SERVICES -->
+    <section class="marquee-section">
+      <div class="marquee" data-speed="1">
+        <div class="marquee__inner">
+          <span>WEB DESIGN</span><span>—</span>
+          <span>SISTEMAS</span><span>—</span>
+          <span>IA & LLMS</span><span>—</span>
+          <span>E-COMMERCE</span><span>—</span>
+        </div>
+      </div>
+      <div class="marquee marquee--reverse" data-speed="-1">
+        <div class="marquee__inner">
+          <span class="outline">A PARTIR DE R$ 2.500</span><span>—</span>
+          <span class="outline">LANDING PAGES</span><span>—</span>
+          <span class="outline">PROMOÇÕES ATIVAS</span><span>—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WIREFRAME REVEAL (PORTFOLIO) -->
+    <section class="portfolio section-safe" id="portfolio" data-slide="2">
+      <div class="portfolio__header">
+        <h2 class="matrix-reveal">SERVIÇOS DISPONÍVEIS</h2>
+        <span class="portfolio__header-meta matrix-reveal">// CATÁLOGO :: 05 ATIVOS</span>
+      </div>
+      <div class="portfolio__layout">
+        <ul class="portfolio__list">
+          <div class="portfolio__spine"></div>
+          <li class="portfolio__item is-active" data-image="/screen-advocacia.jpg" data-meta="VITE / GSAP / SEO TÉCNICO" data-tag="01 / LANDING SIMPLES · CONVERSÃO">
+            <div class="portfolio__branch"></div>
+            <div class="portfolio__item-content">
+              <div class="portfolio__item-index">01</div>
+              <h3 class="portfolio__item-title">LANDING PAGE SIMPLES</h3>
+              <div class="portfolio__item-meta">VITE / GSAP / SEO TÉCNICO</div>
+            </div>
+          </li>
+          <li class="portfolio__item" data-image="/landing-premium-cinema-figma.jpg" data-meta="THREE.JS / GSAP / SEO TÉCNICO" data-tag="02 / LANDING PREMIUM · HIGH-END">
+            <div class="portfolio__branch"></div>
+            <div class="portfolio__item-content">
+              <div class="portfolio__item-index">02</div>
+              <h3 class="portfolio__item-title">LANDING PAGES PREMIUM</h3>
+              <div class="portfolio__item-meta">THREE.JS / GSAP / SEO TÉCNICO</div>
+            </div>
+          </li>
+          <li class="portfolio__item" data-image="/mockup_mercadopro_horizontal%20(1).png" data-meta="REACT NATIVE / SUPABASE / OFFLINE-FIRST" data-tag="03 / APLICATIVOS MOBILE · iOS + ANDROID">
+            <div class="portfolio__branch"></div>
+            <div class="portfolio__item-content">
+              <div class="portfolio__item-index">03</div>
+              <h3 class="portfolio__item-title">APLICATIVOS MOBILE</h3>
+              <div class="portfolio__item-meta">REACT NATIVE / SUPABASE</div>
+            </div>
+          </li>
+          <li class="portfolio__item" data-image="/screen-crm-vendas.jpg" data-meta="NEXT.JS / POSTGRES / DASHBOARDS" data-tag="04 / SISTEMAS CRM · ENTERPRISE">
+            <div class="portfolio__branch"></div>
+            <div class="portfolio__item-content">
+              <div class="portfolio__item-index">04</div>
+              <h3 class="portfolio__item-title">SISTEMAS CRM</h3>
+              <div class="portfolio__item-meta">NEXT.JS / POSTGRES / DASHBOARDS</div>
+            </div>
+          </li>
+          <li class="portfolio__item" data-image="/llm-elite-integracoes.jpg" data-meta="RAG / FINE-TUNING / OPENAI · GEMINI" data-tag="05 / INTEGRAÇÃO LLM · CONCIERGE">
+            <div class="portfolio__branch"></div>
+            <div class="portfolio__item-content">
+              <div class="portfolio__item-index">05</div>
+              <h3 class="portfolio__item-title">INTEGRAÇÃO LLM</h3>
+              <div class="portfolio__item-meta">RAG / FINE-TUNING / OPENAI</div>
+            </div>
+          </li>
+        </ul>
+        <div class="portfolio__preview" data-portfolio-preview>
+          <div class="portfolio__preview-frame">
+            <span class="portfolio__preview-corner portfolio__preview-corner--tl">+</span>
+            <span class="portfolio__preview-corner portfolio__preview-corner--tr">+</span>
+            <span class="portfolio__preview-corner portfolio__preview-corner--bl">+</span>
+            <span class="portfolio__preview-corner portfolio__preview-corner--br">+</span>
+            <span class="portfolio__preview-grid" aria-hidden="true"></span>
+            <img class="portfolio__preview-image" src="/screen-advocacia.jpg" alt="Preview do serviço" data-preview-image>
+            <span class="portfolio__preview-tag" data-preview-tag>[ 01 / LANDING SIMPLES · CONVERSÃO ]</span>
+            <span class="portfolio__preview-meta" data-preview-meta>VITE / GSAP / SEO TÉCNICO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT — FOLDER SYSTEM (auto-rotate + manual select) -->
+    <section class="pricing-section" id="about" data-slide="3">
+      <div class="pricing-layout" data-pricing-layout>
+
+        <aside class="pricing-tickets" data-pricing-tickets>
+          <button type="button" class="pricing-overview-btn is-active" data-pane-target="default" aria-label="Ver visão geral">
+            <span class="pricing-overview-btn__icon" aria-hidden="true">◀</span>
+            <span class="pricing-overview-btn__label">VISÃO GERAL</span>
+            <span class="pricing-overview-btn__sub">// MANIFESTO</span>
+          </button>
+
+          <article class="ticket ticket--tier1" data-ticket="essential" tabindex="0">
+            <header class="ticket__head">
+              <span class="ticket__badge"><span class="pulse-dot"></span> ESSENTIAL</span>
+              <span class="ticket__id">ID: LP-SMPL</span>
+            </header>
+            <div class="ticket__divider"></div>
+            <h3 class="ticket__title">LANDING<br/>PAGE<br/>SIMPLES</h3>
+            <div class="ticket__prices">
+              <p class="ticket__price">R$ 399</p>
+            </div>
+            <div class="ticket__divider"></div>
+            <footer class="ticket__foot">
+              <span class="ticket__action">VER DETALHES</span>
+              <span class="ticket__barcode">| |||| | ||</span>
+            </footer>
+            <span class="ticket__edge" aria-hidden="true"></span>
+          </article>
+
+          <article class="ticket ticket--tier2" data-ticket="premium" tabindex="0">
+            <header class="ticket__head">
+              <span class="ticket__badge ticket__badge--hot"><span class="pulse-dot"></span> VAGAS LIMITADAS</span>
+              <span class="ticket__id">ID: PXC-992</span>
+            </header>
+            <div class="ticket__divider"></div>
+            <h3 class="ticket__title">LANDING<br/>PAGE<br/>PREMIUM</h3>
+            <div class="ticket__prices">
+              <p class="ticket__strike">DE: R$ 2.500</p>
+              <p class="ticket__price">R$ 999</p>
+            </div>
+            <div class="ticket__divider"></div>
+            <footer class="ticket__foot">
+              <span class="ticket__action">RESERVAR VAGA</span>
+              <span class="ticket__barcode">||| |||| || |||</span>
+            </footer>
+            <span class="ticket__edge" aria-hidden="true"></span>
+          </article>
+
+          <article class="ticket ticket--tier3" data-ticket="enterprise" tabindex="0">
+            <header class="ticket__head">
+              <span class="ticket__badge"><span class="pulse-dot"></span> ENTERPRISE</span>
+              <span class="ticket__id">ID: SYS-CRM</span>
+            </header>
+            <div class="ticket__divider"></div>
+            <h3 class="ticket__title">SISTEMAS<br/>&amp; MOBILE</h3>
+            <div class="ticket__prices">
+              <p class="ticket__strike">SOB CONSULTA</p>
+              <p class="ticket__price">R$ 2.000+</p>
+            </div>
+            <div class="ticket__divider"></div>
+            <footer class="ticket__foot">
+              <span class="ticket__action">CONSULTAR</span>
+              <span class="ticket__barcode">|| ||| ||| |</span>
+            </footer>
+            <span class="ticket__edge" aria-hidden="true"></span>
+          </article>
+        </aside>
+
+        <div class="pricing-detail" data-pricing-detail>
+
+          <div class="pricing-pane is-active" data-pane="default">
+            <span class="pricing-pane__eyebrow">// PIXELCODE STUDIO · CATÁLOGO ELITE</span>
+            <h3 class="pricing-pane__heading">ENGENHARIA<br/>NÍVEL ELITE.</h3>
+            <p class="pricing-pane__lead">Não fazemos sites. Construímos ativos digitais com PageSpeed 100, SEO técnico avançado, UX/UI premium e AI integrada — pensados para marcas que disputam o topo do nicho.</p>
+
+            <div class="pricing-pane__features pricing-pane__features--with-art">
+              <div class="pricing-pane__features-list">
+                <div class="pricing-pane__feature">
+                  <span class="pricing-pane__feature-num">01</span>
+                  <div>
+                    <h4>ALTA PERFORMANCE</h4>
+                    <p>PageSpeed 100, LCP &lt; 1.2s, bundle otimizado. Cada KB auditado.</p>
+                  </div>
+                </div>
+                <div class="pricing-pane__feature">
+                  <span class="pricing-pane__feature-num">02</span>
+                  <div>
+                    <h4>SEO TÉCNICO AVANÇADO</h4>
+                    <p>SSR, schema.org, core web vitals — ranqueamento orgânico estruturado.</p>
+                  </div>
+                </div>
+                <div class="pricing-pane__feature">
+                  <span class="pricing-pane__feature-num">03</span>
+                  <div>
+                    <h4>UX/UI PREMIUM</h4>
+                    <p>Coreografia de movimento e tipografia awwwards-tier focada em conversão.</p>
+                  </div>
+                </div>
+                <div class="pricing-pane__feature">
+                  <span class="pricing-pane__feature-num">04</span>
+                  <div>
+                    <h4>SEGURANÇA &amp; AI</h4>
+                    <p>RAG privado, auth + permissões, integração OpenAI/Gemini de nível corporativo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="pricing-pane__art" aria-hidden="true">
+                <img src="/screen-3d-2.jpg" alt="" loading="lazy"/>
+                <div class="pricing-pane__art-grid"></div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--tl">+</div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--tr">+</div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--bl">+</div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--br">+</div>
+                <span class="pricing-pane__art-tag">[ STUDIO MOCKUP · WEB ELITE ]</span>
+              </div>
+            </div>
+
+            <p class="pricing-pane__hint">→ SELECIONE UM TICKET À ESQUERDA PARA VER ESCOPO, APLICAÇÃO E ENTREGÁVEIS</p>
+          </div>
+
+          <div class="pricing-pane" data-pane="essential">
+            <span class="pricing-pane__eyebrow">// 01 ESSENTIAL · LP-SMPL · R$ 399</span>
+            <h3 class="pricing-pane__heading">LANDING PAGE<br/>SIMPLES</h3>
+            <p class="pricing-pane__lead">Página única high-end com PageSpeed 100, SEO técnico e CTA otimizado por testes A/B. Para validar oferta, capturar leads e ranquear orgânico em até 30 dias.</p>
+
+            <div class="pricing-pane__main">
+              <div class="pricing-pane__grid">
+                <section>
+                  <h4>ONDE SE APLICA</h4>
+                  <ul>
+                    <li>Captura de leads B2B/B2C</li>
+                    <li>Lançamento de infoprodutos</li>
+                    <li>Página institucional premium</li>
+                    <li>Validação de oferta nova</li>
+                  </ul>
+                </section>
+                <section>
+                  <h4>COMO FUNCIONA</h4>
+                  <ol>
+                    <li>Briefing &amp; arquitetura — 1 dia</li>
+                    <li>Design &amp; copy estratégico — 2 dias</li>
+                    <li>Dev Vite + GSAP + SEO — 3 dias</li>
+                    <li>Deploy Vercel + handoff — 1 dia</li>
+                  </ol>
+                </section>
+              </div>
+              <div class="pricing-pane__art pricing-pane__art--inline" aria-hidden="true">
+                <div class="pricing-pane__gallery">
+                  <img class="pricing-pane__gallery-img" src="/landingsimples/landing-clinic.jpg" alt="" loading="lazy"/>
+                  <img class="pricing-pane__gallery-img" src="/landingsimples/landing-lawyer.jpg" alt="" loading="lazy"/>
+                  <img class="pricing-pane__gallery-img" src="/landingsimples/landing-phonerepair.jpg" alt="" loading="lazy"/>
+                </div>
+                <div class="pricing-pane__art-grid"></div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--tl">+</div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--br">+</div>
+                <span class="pricing-pane__art-tag">[ EXEMPLOS · LANDING SIMPLES ]</span>
+              </div>
+            </div>
+
+            <div class="pricing-pane__deliverables">
+              <h4>O QUE VEM JUNTO</h4>
+              <div class="pricing-pane__chips">
+                <span>Hero cinematográfico</span>
+                <span>SEO técnico + schema</span>
+                <span>Form + integração</span>
+                <span>Analytics GA4</span>
+                <span>Domínio + SSL</span>
+                <span>3 revisões</span>
+              </div>
+              <div class="pricing-pane__support">
+                <span class="pricing-pane__support-item">✓ Suporte para personalização incluso por 30 dias após a entrega</span>
+                <span class="pricing-pane__support-item">✓ Hospedagem vitalícia inclusa · sem mensalidade mensal</span>
+              </div>
+            </div>
+
+            <a class="pricing-pane__cta" href="https://wa.me/5518996311933?text=Ol%C3%A1%20Vinicius%2C%20quero%20o%20plano%20Essential." target="_blank" rel="noopener">
+              CONTRATAR ESSENTIAL · R$ 399
+            </a>
+          </div>
+
+          <div class="pricing-pane" data-pane="premium">
+            <span class="pricing-pane__eyebrow">// 02 PREMIUM · PXC-992 · R$ 999</span>
+            <h3 class="pricing-pane__heading">LANDING PAGE<br/>PREMIUM</h3>
+            <p class="pricing-pane__lead">Experiência cinematográfica com shaders Three.js, coreografia GSAP e design awwwards-tier. Para marcas que disputam atenção em mercados de luxo, tecnologia ou serviços high-end.</p>
+
+            <div class="pricing-pane__main">
+              <div class="pricing-pane__grid">
+                <section>
+                  <h4>ONDE SE APLICA</h4>
+                  <ul>
+                    <li>Marcas premium &amp; luxury</li>
+                    <li>Lançamento de produto/coleção</li>
+                    <li>Posicionamento awwwards</li>
+                    <li>Portfólio de criadores</li>
+                  </ul>
+                </section>
+                <section>
+                  <h4>COMO FUNCIONA</h4>
+                  <ol>
+                    <li>Discovery + benchmark (2d)</li>
+                    <li>Design system + storyboard (4d)</li>
+                    <li>Dev WebGL + GSAP (6d)</li>
+                    <li>QA + deploy + handoff (2d)</li>
+                  </ol>
+                </section>
+              </div>
+              <div class="pricing-pane__art pricing-pane__art--inline" aria-hidden="true">
+                <div class="pricing-pane__gallery">
+                  <img class="pricing-pane__gallery-img" src="/landingpremium/landing-premium-figma3d.jpg" alt="" loading="lazy"/>
+                  <img class="pricing-pane__gallery-img" src="/landingpremium/landing-premium-gsap.jpg" alt="" loading="lazy"/>
+                  <img class="pricing-pane__gallery-img" src="/landingpremium/landing-premium-threejs.jpg" alt="" loading="lazy"/>
+                </div>
+                <div class="pricing-pane__art-grid"></div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--tl">+</div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--br">+</div>
+                <span class="pricing-pane__art-tag">[ EXEMPLOS · LANDING PREMIUM ]</span>
+              </div>
+            </div>
+
+            <div class="pricing-pane__deliverables">
+              <h4>O QUE VEM JUNTO</h4>
+              <div class="pricing-pane__chips">
+                <span>Three.js + shaders custom</span>
+                <span>GSAP avançado</span>
+                <span>Cursor cinematográfico</span>
+                <span>Loader exclusivo</span>
+                <span>Lighthouse 95+</span>
+                <span>5 revisões</span>
+              </div>
+              <div class="pricing-pane__support">
+                <span class="pricing-pane__support-item">✓ Suporte para personalização incluso por 30 dias após a entrega</span>
+                <span class="pricing-pane__support-item">✓ Hospedagem vitalícia inclusa · sem mensalidade mensal</span>
+              </div>
+            </div>
+
+            <a class="pricing-pane__cta pricing-pane__cta--hot" href="https://wa.me/5518996311933?text=Ol%C3%A1%20Vinicius%2C%20quero%20reservar%20uma%20vaga%20Premium." target="_blank" rel="noopener">
+              RESERVAR VAGA PREMIUM · R$ 999
+            </a>
+          </div>
+
+          <div class="pricing-pane" data-pane="enterprise">
+            <span class="pricing-pane__eyebrow">// 03 ENTERPRISE · SYS-CRM · R$ 2.000+</span>
+            <h3 class="pricing-pane__heading">SISTEMAS<br/>&amp; MOBILE</h3>
+            <p class="pricing-pane__lead">App nativo, CRM proprietário, dashboard de BI conversacional ou plataforma com AI. Arquitetura escalável, RAG seguro e design system documentado para operações que não aceitam SaaS pronto.</p>
+
+            <div class="pricing-pane__main">
+              <div class="pricing-pane__grid">
+                <section>
+                  <h4>ONDE SE APLICA</h4>
+                  <ul>
+                    <li>SaaS B2B vertical</li>
+                    <li>App mobile (iOS + Android)</li>
+                    <li>CRM &amp; BI conversacional</li>
+                    <li>Concierge IA &amp; KB privada</li>
+                  </ul>
+                </section>
+                <section>
+                  <h4>COMO FUNCIONA</h4>
+                  <ol>
+                    <li>Discovery profundo (1 sem.)</li>
+                    <li>Arquitetura + design system (2 sem.)</li>
+                    <li>Sprints de dev (4–12 sem.)</li>
+                    <li>Deploy + métricas + iteração</li>
+                  </ol>
+                </section>
+              </div>
+              <div class="pricing-pane__art pricing-pane__art--inline" aria-hidden="true">
+                <div class="pricing-pane__gallery">
+                  <img class="pricing-pane__gallery-img" src="/sismob/running-app-mockup.png" alt="" loading="lazy"/>
+                  <img class="pricing-pane__gallery-img" src="/sismob/screen-crm%20(1).jpg" alt="" loading="lazy"/>
+                  <img class="pricing-pane__gallery-img" src="/sismob/screen-crm-mobile-transparent.png" alt="" loading="lazy"/>
+                </div>
+                <div class="pricing-pane__art-grid"></div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--tl">+</div>
+                <div class="pricing-pane__art-corner pricing-pane__art-corner--br">+</div>
+                <span class="pricing-pane__art-tag">[ EXEMPLOS · SISTEMAS &amp; MOBILE ]</span>
+              </div>
+            </div>
+
+            <div class="pricing-pane__deliverables">
+              <h4>O QUE VEM JUNTO</h4>
+              <div class="pricing-pane__chips">
+                <span>Next.js / React Native</span>
+                <span>Supabase / Postgres</span>
+                <span>RAG + OpenAI/Gemini</span>
+                <span>Auth + permissões</span>
+                <span>CI/CD + monitoring</span>
+                <span>Documentação técnica</span>
+              </div>
+              <div class="pricing-pane__support">
+                <span class="pricing-pane__support-item">✓ Suporte para personalização incluso por 30 dias após a entrega</span>
+                <span class="pricing-pane__support-item">⚠ Custos de backend e servidor são variáveis conforme o projeto</span>
+              </div>
+            </div>
+
+            <a class="pricing-pane__cta" href="https://wa.me/5518996311933?text=Ol%C3%A1%20Vinicius%2C%20quero%20discutir%20um%20projeto%20Enterprise." target="_blank" rel="noopener">
+              SOLICITAR PROPOSTA · A PARTIR DE R$ 2.000
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PROCESS PIPELINE (Development Process) -->
+    <section class="process-pipeline-section section-safe" id="process" data-slide="4">
+      <div class="section-header section-header--left">
+        <h2 class="section-title matrix-reveal">PROCESSO DE DESENVOLVIMENTO</h2>
+        <p class="section-subtitle matrix-reveal">// FROM_BRIEFING_TO_PRODUCTION :: 5 ETAPAS</p>
+      </div>
+
+      <div class="process-pipeline">
+        <article class="process-step" data-step="1">
+          <span class="process-step__index">01</span>
+          <svg class="process-step__wire" viewBox="0 0 100 60" aria-hidden="true">
+            <rect x="6" y="8" width="42" height="6" stroke="currentColor" fill="none" stroke-width="0.8"/>
+            <rect x="6" y="18" width="34" height="3" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="6" y="24" width="38" height="3" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="6" y="30" width="28" height="3" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <circle cx="62" cy="14" r="6" stroke="currentColor" fill="none" stroke-width="0.8"/>
+            <path d="M58 14 L60.5 16.5 L66 11" stroke="currentColor" fill="none" stroke-width="0.8" stroke-linecap="round"/>
+            <circle cx="78" cy="14" r="6" stroke="currentColor" fill="none" stroke-width="0.8" opacity="0.5"/>
+            <rect x="55" y="26" width="38" height="22" stroke="currentColor" fill="none" stroke-width="0.6" stroke-dasharray="2 2"/>
+            <text x="74" y="40" font-size="6" font-family="monospace" fill="currentColor" text-anchor="middle" opacity="0.7">KPI</text>
+            <line x1="6" y1="42" x2="48" y2="42" stroke="currentColor" stroke-width="0.4" opacity="0.4"/>
+            <line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="0.4" opacity="0.4"/>
+          </svg>
+          <div class="process-step__body">
+            <h3 class="process-step__title hover-bug">DISCOVERY</h3>
+            <p class="process-step__desc">Briefing profundo, análise de concorrência, definição de KPIs e objetivos de negócio.</p>
+            <span class="process-step__deliverable">DOC. ESTRATÉGICO</span>
+          </div>
+          <span class="process-step__duration">~3 DIAS</span>
+          <svg class="process-step__arrow" viewBox="0 0 60 24" aria-hidden="true">
+            <path d="M0 12 L48 12 M40 4 L48 12 L40 20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </article>
+
+        <article class="process-step" data-step="2">
+          <span class="process-step__index">02</span>
+          <svg class="process-step__wire" viewBox="0 0 100 60" aria-hidden="true">
+            <rect x="6" y="6" width="88" height="48" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="10" y="10" width="80" height="6" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <rect x="10" y="20" width="22" height="30" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <rect x="36" y="20" width="32" height="14" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <rect x="36" y="38" width="32" height="12" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <rect x="72" y="20" width="18" height="30" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <line x1="14" y1="26" x2="28" y2="26" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+            <line x1="14" y1="32" x2="26" y2="32" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+            <line x1="14" y1="38" x2="28" y2="38" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+            <line x1="14" y1="44" x2="24" y2="44" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+          </svg>
+          <div class="process-step__body">
+            <h3 class="process-step__title hover-bug">ARQUITETURA</h3>
+            <p class="process-step__desc">Wireframes brutalistas, fluxo de usuário, escolha de stack e infraestrutura.</p>
+            <span class="process-step__deliverable">WIREFRAMES + STACK</span>
+          </div>
+          <span class="process-step__duration">~5 DIAS</span>
+          <svg class="process-step__arrow" viewBox="0 0 60 24" aria-hidden="true">
+            <path d="M0 12 L48 12 M40 4 L48 12 L40 20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </article>
+
+        <article class="process-step" data-step="3">
+          <span class="process-step__index">03</span>
+          <svg class="process-step__wire" viewBox="0 0 100 60" aria-hidden="true">
+            <rect x="6" y="6" width="20" height="20" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="32" y="6" width="20" height="20" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="58" y="6" width="20" height="20" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="84" y="6" width="10" height="20" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="6" y="34" width="44" height="20" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="56" y="34" width="38" height="8" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="56" y="46" width="38" height="8" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <circle cx="16" cy="16" r="4" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <line x1="36" y1="14" x2="48" y2="14" stroke="currentColor" stroke-width="0.5"/>
+            <line x1="36" y1="18" x2="44" y2="18" stroke="currentColor" stroke-width="0.5"/>
+            <rect x="62" y="11" width="12" height="10" stroke="currentColor" fill="none" stroke-width="0.4" stroke-dasharray="1 1"/>
+          </svg>
+          <div class="process-step__body">
+            <h3 class="process-step__title hover-bug">DESIGN SYSTEM</h3>
+            <p class="process-step__desc">Tokens, componentes, prototipação interativa, microinterações e validação visual.</p>
+            <span class="process-step__deliverable">UI KIT + PROTÓTIPO</span>
+          </div>
+          <span class="process-step__duration">~7 DIAS</span>
+          <svg class="process-step__arrow" viewBox="0 0 60 24" aria-hidden="true">
+            <path d="M0 12 L48 12 M40 4 L48 12 L40 20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </article>
+
+        <article class="process-step" data-step="4">
+          <span class="process-step__index">04</span>
+          <svg class="process-step__wire" viewBox="0 0 100 60" aria-hidden="true">
+            <rect x="6" y="6" width="88" height="48" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <line x1="6" y1="14" x2="94" y2="14" stroke="currentColor" stroke-width="0.5"/>
+            <circle cx="10" cy="10" r="1" fill="currentColor"/>
+            <circle cx="14" cy="10" r="1" fill="currentColor"/>
+            <circle cx="18" cy="10" r="1" fill="currentColor"/>
+            <text x="10" y="22" font-size="4" font-family="monospace" fill="currentColor" opacity="0.85">$ npm run build</text>
+            <text x="10" y="28" font-size="3.5" font-family="monospace" fill="currentColor" opacity="0.7">▸ vite v5.4 building...</text>
+            <text x="10" y="34" font-size="3.5" font-family="monospace" fill="currentColor" opacity="0.7">▸ shaders compiled</text>
+            <text x="10" y="40" font-size="3.5" font-family="monospace" fill="currentColor" opacity="0.7">▸ bundle 183kB gzip</text>
+            <text x="10" y="46" font-size="3.5" font-family="monospace" fill="currentColor" opacity="0.85">✓ build · 0.42s</text>
+            <rect x="10" y="48" width="2" height="4" fill="currentColor">
+              <animate attributeName="opacity" values="1;0;1" dur="0.9s" repeatCount="indefinite"/>
+            </rect>
+          </svg>
+          <div class="process-step__body">
+            <h3 class="process-step__title hover-bug">DEV &amp; WEBGL</h3>
+            <p class="process-step__desc">Implementação Next.js / Vite, shaders Three.js, coreografias GSAP, integrações com IA.</p>
+            <span class="process-step__deliverable">BUILD COMPLETO</span>
+          </div>
+          <span class="process-step__duration">~14 DIAS</span>
+          <svg class="process-step__arrow" viewBox="0 0 60 24" aria-hidden="true">
+            <path d="M0 12 L48 12 M40 4 L48 12 L40 20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </article>
+
+        <article class="process-step" data-step="5">
+          <span class="process-step__index">05</span>
+          <svg class="process-step__wire" viewBox="0 0 100 60" aria-hidden="true">
+            <rect x="6" y="6" width="88" height="48" stroke="currentColor" fill="none" stroke-width="0.6"/>
+            <rect x="10" y="10" width="22" height="14" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <text x="21" y="20" font-size="6" font-family="monospace" fill="currentColor" text-anchor="middle" font-weight="bold">98</text>
+            <rect x="36" y="10" width="22" height="14" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <text x="47" y="20" font-size="5" font-family="monospace" fill="currentColor" text-anchor="middle">1.1s</text>
+            <rect x="62" y="10" width="28" height="14" stroke="currentColor" fill="none" stroke-width="0.5"/>
+            <polyline points="64,22 70,16 76,19 82,12 88,14" fill="none" stroke="currentColor" stroke-width="0.6"/>
+            <polyline points="10,48 20,42 30,40 40,34 50,30 60,32 70,26 80,22 90,18" fill="none" stroke="currentColor" stroke-width="0.7"/>
+            <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" stroke-width="0.4" opacity="0.4"/>
+            <circle cx="90" cy="18" r="1.4" fill="currentColor"/>
+          </svg>
+          <div class="process-step__body">
+            <h3 class="process-step__title hover-bug">DEPLOY &amp; MONITOR</h3>
+            <p class="process-step__desc">Auditoria de performance, SEO, analytics, monitoramento e handoff técnico.</p>
+            <span class="process-step__deliverable">PRODUÇÃO + DASH</span>
+          </div>
+          <span class="process-step__duration">~3 DIAS</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT — FREQUÊNCIA · ÚLTIMO QUADRO -->
+    <section class="contact-cinema" id="contact" data-slide="5">
+      <canvas class="contact-particles" aria-hidden="true"></canvas>
+
+      <div class="contact-cinema__inner">
+        <p class="contact-cinema__eyebrow matrix-reveal">[ FREQUÊNCIA SINTONIZADA · 06 / 06 ]</p>
+
+        <div class="manifesto" data-spotlight>
+          <p class="manifesto__line" data-text="ESTÚDIO INDEPENDENTE.">ESTÚDIO INDEPENDENTE.</p>
+          <p class="manifesto__line" data-text="OBSESSIVO COM DETALHES.">OBSESSIVO COM DETALHES.</p>
+          <p class="manifesto__line" data-text="BUILT IN BRAZIL · DISPONÍVEL AGORA.">BUILT IN BRAZIL · DISPONÍVEL AGORA.</p>
+        </div>
+
+        <p class="contact-cinema__lead matrix-reveal">Conversa em tempo real abaixo. Resposta em até 12 horas úteis.</p>
+
+        <div class="flipclock" data-flipclock="+55 18 99631-1933" aria-label="WhatsApp +55 18 99631-1933"></div>
+
+        <a class="contact-cta" data-magnetic
+           href="https://wa.me/5518996311933?text=Ol%C3%A1%20Vinicius%2C%20vim%20pelo%20site%20da%20PixelCode%20Studio."
+           target="_blank" rel="noopener">
+          <span class="contact-cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="28" height="28">
+              <path fill="currentColor" d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.7 1.9 6.6L4 29l7.6-2c1.8 1 3.9 1.5 6 1.5h.4c6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.7h-.3c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-4.5 1.2 1.2-4.4-.3-.4c-1-1.6-1.6-3.5-1.6-5.5 0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10.7-9 10.7zm5.5-7.6c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.2-.2.2-.3.3-.5.1-.2.1-.4 0-.5l-.7-1.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1 0 1.3.9 2.5 1.1 2.7.1.2 1.8 2.7 4.4 3.8 1.6.7 2.2.7 3 .6.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.3-.6-.4z"/>
+            </svg>
+          </span>
+          <span class="contact-cta__label">ABRIR CANAL</span>
+        </a>
+
+        <svg class="signature" viewBox="0 0 600 110" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+          <path class="signature__path" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            d="M30,70 C40,40 60,30 75,55 C82,72 78,88 70,86 C62,84 70,60 90,55 L110,50 M120,40 L120,80 M120,55 C140,40 165,55 150,75 C140,88 122,82 122,82 M170,80 L170,40 C190,40 200,55 195,68 C188,86 170,80 170,80 M210,40 L210,80 M210,40 L235,80 L235,40 M260,80 L260,40 C280,40 290,55 285,68 C278,86 260,80 260,80 M310,80 L310,40 M310,40 L335,80 L335,40 M360,40 L380,80 L400,40 M420,80 C440,40 470,40 470,55 C470,80 440,80 440,80 L470,80 M495,80 L495,40 M495,40 L520,80 L520,40 M540,40 L560,80 L580,40" />
+        </svg>
+
+        <footer class="contact-cinema__meta">
+          <div class="contact-cinema__meta-col">
+            <span>VINICIUS RIBEIRO · PIXELCODE STUDIO</span>
+            <span>CNPJ 66.257.657/0001-47</span>
+          </div>
+          <div class="contact-cinema__meta-col contact-cinema__meta-col--right">
+            <a href="mailto:contato@pixelcodestudio.com.br" class="hover-line">contato@pixelcodestudio.com.br</a>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shaders na tag script para facilitar acesso no JS -->
+  <script id="vertexShader" type="x-shader/x-vertex">
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  </script>
+
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    uniform sampler2D tDiffuse;
+    uniform vec2 uMouse;
+    uniform float uTime;
+    uniform float uHoverState;
+    varying vec2 vUv;
+    
+    void main() {
+      vec2 uv = vUv;
+      
+      // Distorção Ripple baseada no mouse
+      float dist = distance(uv, uMouse);
+      float ripple = sin(dist * 20.0 - uTime * 5.0) * 0.02 * uHoverState;
+      uv += ripple;
+      
+      // Aberração Cromática Sutil
+      float r = texture2D(tDiffuse, uv + vec2(0.005 * uHoverState, 0.0)).r;
+      float g = texture2D(tDiffuse, uv).g;
+      float b = texture2D(tDiffuse, uv - vec2(0.005 * uHoverState, 0.0)).b;
+      
+      vec4 finalColor = vec4(r, g, b, 1.0);
+      gl_FragColor = finalColor;
+    }
+  </script>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Triptych Card</title>
+<style>
+  :root {
+    --gap: 0px;
+    --radius: 18px;
+    --skew: 140px;       /* horizontal offset of the diagonal divider */
+    --bg: #0e0e10;
+    --ink: #f6f4ef;
+    --muted: #b9b3a8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif; min-height: 100%; }
+  body { display: grid; place-items: center; padding: 64px 32px; gap: 28px; }
+
+  .stage { width: min(1280px, 100%); display: grid; gap: 28px; }
+
+  .eyebrow { font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--muted); }
+  h1 { font-family: "Cormorant Garamond", "Times New Roman", serif;
+    font-weight: 500; font-size: clamp(28px, 4vw, 44px); margin: 0;
+    letter-spacing: -0.01em; }
+  h1 em { font-style: italic; color: var(--muted); }
+
+  /* The triptych card */
+  .triptych {
+    --h: clamp(280px, 38vw, 460px);
+    position: relative;
+    width: 100%;
+    height: var(--h);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #000;
+    isolation: isolate;
+  }
+
+  .panel {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform .9s cubic-bezier(.2,.7,.2,1),
+                filter .6s ease;
+    will-change: transform, clip-path;
+  }
+
+  /* Two trapezoid slices, separated by ONE slanted cut.
+     The cut goes from top (further right) to bottom (further left)
+     so the divider leans like in the sketch. */
+  .panel.left {
+    clip-path: polygon(
+      0 0,
+      calc(50% - var(--gap) / 2) 0,
+      calc(50% - var(--skew) - var(--gap) / 2) 100%,
+      0 100%
+    );
+  }
+  .panel.right {
+    clip-path: polygon(
+      calc(50% + var(--gap) / 2) 0,
+      100% 0,
+      100% 100%,
+      calc(50% - var(--skew) + var(--gap) / 2) 100%
+    );
+  }
+
+  /* Subtle vignette on each slice to read as separate cards */
+  .panel::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(0,0,0,0) 40%,
+      rgba(0,0,0,.55) 100%);
+    pointer-events: none;
+  }
+
+  /* Hover: lift the hovered slice slightly, dim the others */
+  .triptych:hover .panel { filter: brightness(.55) saturate(.85); }
+  .panel:hover { filter: brightness(1.05) saturate(1.05); transform: scale(1.02); z-index: 2; }
+
+  /* Caption block per slice */
+  .caption {
+    position: absolute;
+    bottom: 18px;
+    left: 22px;
+    right: 22px;
+    color: #fff;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 3;
+  }
+  .caption .num { font: 500 11px/1 "Inter", sans-serif; letter-spacing: .2em;
+    color: rgba(255,255,255,.7); }
+  .caption .title { font-family: "Cormorant Garamond", serif;
+    font-size: clamp(18px, 2vw, 26px); font-weight: 500; letter-spacing: -.01em; }
+  .caption .meta { font: 400 12px/1.4 "Inter", sans-serif;
+    color: rgba(255,255,255,.7); }
+
+  /* Each caption is positioned inside its slice — use the same clip math
+     visually but with simple anchors */
+  .cap-left   { left: 24px; max-width: 28%; }
+  .cap-center { left: 50%; transform: translateX(-50%); text-align: center; }
+  .cap-right  { right: 24px; left: auto; text-align: right; max-width: 28%; }
+
+  /* Hairline divider strokes on top of the cuts (optional polish) */
+  .triptych svg.cuts {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 2;
+  }
+  .triptych svg.cuts line {
+    stroke: rgba(255,255,255,.08);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* Footer row matching the dark-editorial vibe */
+  .row { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+  .row .lede { font: 400 14px/1.5 "Inter", sans-serif; color: var(--muted);
+    max-width: 56ch; }
+  .row .pill {
+    font: 500 12px/1 "Inter", sans-serif; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink);
+    border: 1px solid rgba(255,255,255,.18);
+    padding: 12px 18px; border-radius: 999px; white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="row">
+      <div>
+        <div class="eyebrow">Selected Work</div>
+        <h1>Dois projetos, <em>uma vitrine</em></h1>
+      </div>
+      <div class="pill">2024 — 2025</div>
+    </div>
+
+    <div class="triptych" aria-label="Card de dois projetos">
+      <div class="panel left"
+           style="background-image: url('uploads/screen-3d-2.jpg');"
+           role="img" aria-label="Obys — Selected Work 2024">
+        <div class="caption cap-left">
+          <span class="num">01 / Portfólio</span>
+          <span class="title">Selected Work — 2024</span>
+          <span class="meta">Editorial grid · Studio</span>
+        </div>
+      </div>
+
+      <div class="panel right"
+           style="background-image: url('uploads/screen-3d.jpg');"
+           role="img" aria-label="Estúdio digital — Experiências 3D">
+        <div class="caption cap-right">
+          <span class="num">02 / Estúdio</span>
+          <span class="title">Experiências digitais</span>
+          <span class="meta">Brand site · 3D · Motion</span>
+        </div>
+      </div>
+
+      <!-- Hairlines along the cuts -->
+      <svg class="cuts" preserveAspectRatio="none" viewBox="0 0 100 100">
+        <!-- Single hairline along the diagonal cut.
+             Top at 50%, bottom shifted left by skew (~11% at 1280 width). -->
+        <line x1="50" y1="0" x2="39" y2="100" />
+      </svg>
+    </div>
+
+    <div class="row">
+      <p class="lede">Dois sites de portfólio reunidos em um único quadro:
+        recorte diagonal contínuo do topo à base, com cada peça respirando
+        em sua própria fatia.</p>
+      <div class="pill">Ver todos os projetos →</div>
+    </div>
+  </div>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+</body>
+</html>

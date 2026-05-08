@@ -1,0 +1,22 @@
+{
+  "name": "testerepo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "animejs": "^3.2.2",
+    "gsap": "^3.12.5",
+    "lenis": "^1.0.42",
+    "motion": "^10.16.4",
+    "three": "^0.164.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
